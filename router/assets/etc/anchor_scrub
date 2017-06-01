@@ -1,0 +1,32 @@
+# Liam Nolan 2016 - halon
+
+int_if="em0"
+ext_if="re0"
+ps4_ip="192.168.99.20"
+torrents_ip="192.168.99.5"
+# fullbogon list from www.team-cymru.org/Services/Bogons/bogon-bn-nonagg.txt
+table <fullbogons> const { 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8 
+                    169.254.0.0/16 127.16.0.0/12 192.0.0.0/24
+                    192.0.2.0/24 192.168.0.0/16 198.18.0.0/15
+                    198.51.100.0/24 203.0.113.0/24 224.0.0.0/4
+                    240.0.0.0/4 !192.168.99.0/24}
+
+table <merged_blacklist> persist file "/usr/local/libdata/pybl/blacklist"
+
+match in tagged input scrub (max-mss 1460 no-df random-id reassemble tcp)
+#match in tagged torrents scrub (max-mss 1460 no-df random-id reassemble tcp)
+#match in tagged port_forward scrub (max-mss 1460 no-df random-id reassemble tcp)
+
+antispoof log quick for $int_if inet 
+antispoof log quick for $ext_if inet
+block in quick from urpf-failed 
+
+block in log (all, to pflog0) quick on egress from <merged_blacklist> to any 
+block return out log (all, to pflog0) quick on egress from any to <merged_blacklist>
+block in log (all, to pflog0) quick on egress from <fullbogons> to any
+block return out log quick on egress from any to <fullbogons> 
+
+# don't allow outgoing mail
+block out quick on $ext_if inet proto {tcp udp} from any to any port 25
+# By default, do not permit remote connections to X11
+block in quick on ! lo0 proto tcp to port 6000:6010

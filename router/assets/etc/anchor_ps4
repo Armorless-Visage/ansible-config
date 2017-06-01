@@ -1,0 +1,10 @@
+# Liam Nolan 2016 - halon
+
+int_if="em0"
+ext_if="re0"
+ps4_ip="192.168.99.20"
+match in on $int_if from $ps4_ip tag ps4
+# No PAT
+match out on egress inet tagged ps4 nat-to (egress:0) static-port
+# With PAT
+#match out on egress inet tagged ps4 nat-to (egress:0)

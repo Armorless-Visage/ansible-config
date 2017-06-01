@@ -1,0 +1,10 @@
+# Liam Nolan 2016 - halon
+
+int_if="em0"
+ext_if="re0"
+torrents_ip="192.168.99.5"
+
+match in on $int_if from $torrents_ip tag torrents
+match out on egress inet tagged torrents nat-to (egress:0) static-port 
+pass in quick on $ext_if inet proto {tcp, udp} from any to ($ext_if) port 54977 rdr-to $torrents_ip port 54977 modulate state set queue (torrents, torrents)
+pass out quick on $ext_if inet proto {tcp, udp} from $torrents_ip modulate state set queue (torrents, torrents)

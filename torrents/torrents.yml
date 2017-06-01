@@ -1,0 +1,98 @@
+# Armorless-Visage 2017
+---
+- hosts: torrents
+  remote_user: ansibleadm
+  become: yes
+  vars:
+    # Packages required for nfs and smb
+    system_packages: ['transmission-daemon']
+    # required services
+    system_services: ['transmission-daemon.service']
+    # firewalld conf 
+    firewalld_services: ['ssh'] 
+    firewalld_ports: ['55099/tcp']
+    firewalld_zone: "dmz"
+    # transmission-daemon settings.json local copy
+    settings_json: "/home/sshuser/ansible/torrents/assets/transmission-daemon/settings.json"
+    
+  tasks:
+    - name: transmission present and updated
+      dnf: 
+          name: "{{ item }}"
+          state: latest
+      become: yes
+      become_method: sudo
+      with_items: "{{ system_packages }}"
+      register: updates
+   
+# transmission will overwrite settings.json with the in memory copy if it is running
+# check for differences in local/remote copy of settings.json then stop transmission
+# install the settings.json file then start transmission-daemon again
+    - local_action: stat path="{{ settings_json }}" checksum_algorithm=sha512
+      become: no
+      register: srcconf
+    - stat:
+        path: "/var/lib/transmission/.config/transmission-daemon/settings.json"
+        checksum_algorithm: sha512
+      register: destconf
+    
+    - name: stop transmission-daemon
+      systemd:
+          name: "transmission-daemon.service"
+          state: "restarted"
+      when: srcconf.stat.checksum != destconf.stat.checksum
+      register: stop_transmission
+
+    - name: install /var/lib/transmission/.config/transmission-daemon/settings.json
+      copy: 
+          src: "{{ settings_json }}"
+          dest: "/var/lib/transmission/.config/transmission-daemon/settings.json"
+          mode: "u=rw"
+          seuser: "system_u" 
+          serole: "object_r"
+          setype: "var_lib_t"
+          backup: yes
+      register: transmission_settings
+      when: stop_transmission.changed
+
+    - name: restart transmission-daemon
+      systemd:
+          name: "transmission-daemon.service"
+          state: "started"
+      when: stop_transmission.changed
+
+# NOTE: bug with this module and systemd results in service not found errors
+    - name: start/enable system services
+      systemd:
+          name: "{{ item }}"
+          state: "started"
+          enabled: "yes"
+          masked: "no"
+      with_items: "{{ system_services }}"
+
+    - name: set firewalld state (services)
+      firewalld:
+          service: "{{ item }}"
+          zone: "{{ firewalld_zone }}"
+          permanent: yes
+          state: enabled
+      with_items: "{{ firewalld_services }}"
+    - name: set firewalld state (ports)
+      firewalld:
+          port: "{{ item }}"
+          zone: "{{ firewalld_zone }}"
+          permanent: yes
+          state: enabled
+      with_items: "{{ firewalld_ports }}"
+
+
+# if core services updated restart the daemons
+# NOTE: using 'state: reloaded' produces an error about rpcbind.service
+    - name: service update daemon reload
+      systemd:
+        name: "{{ item }}"
+        state: restarted
+      with_items: "{{ system_services }}"
+      when: updates.changed
+        
+      

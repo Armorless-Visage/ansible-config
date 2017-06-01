@@ -1,0 +1,3 @@
+*.retry
+*.swp
+httpd/assets/var/www/html/public

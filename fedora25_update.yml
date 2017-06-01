@@ -1,0 +1,11 @@
+---
+# (c) Armorless-Visage 2017 BSD 2 Clause
+# update all fedora 25 hosts to latest state
+- hosts: fedora
+  remote_user: ansibleadm
+
+  tasks:
+  - name: upgrade all
+    dnf: name=* state=latest
+    become: yes
+    become_method: sudo

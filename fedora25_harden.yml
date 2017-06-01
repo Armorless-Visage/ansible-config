@@ -1,0 +1,306 @@
+---
+# (c) Armorless-Visage 2017 BSD 2 Clause 
+# secure baseline configuration for fedora 25
+# loosely based on stig/scap guidelines
+
+- hosts: fedora
+  remote_user: ansibleadm
+  become: yes
+  become_method: sudo
+  vars:
+    system_packages: ['rsyslog', 'vim', 'tar', 'python', 'ansible',
+                        'python2-dnf', 'libselinux', 'selinux-policy',
+                        'selinux-policy-sandbox', 'selinux-policy-targeted',
+                        'policycoreutils-python', 'policycoreutils-python-utils']
+    system_services: ['rsyslog.service']
+
+  tasks: 
+
+    - name: install system packages
+      dnf:
+          name: "{{ item }}"
+          state: latest
+      with_items: "{{ system_packages }}"
+      register: sys_packages
+      tags: packages
+
+    - name: rsyslog.conf
+      copy: 
+        src: baseline/rsyslog.conf
+        dest: /etc/rsyslog.conf
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "syslog_conf_t" 
+      register: rsyslog
+      when: inventory_hostname != "www.local"
+      tags: conf
+    
+    - name: rsyslog.conf (logserver)
+      copy: 
+        src: baseline/rsyslog.conf.server
+        dest: /etc/rsyslog.conf
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "syslog_conf_t" 
+      register: rsyslog_server
+      when: inventory_hostname == "www.local"
+      tags: conf
+    
+    - name: restart rsyslog if configuration changed
+      systemd:
+          name: "rsyslog.service"
+          state: "restarted"
+      when: rsyslog.changed or rsyslog_server.changed
+
+    - name: start/enable system services
+      systemd:
+          name: "{{ item }}"
+          state: "started"
+          enabled: "yes"
+          masked: "no"
+      with_items: "{{ system_services }}"
+      tags: packages
+    
+    # /etc/ configuration
+    - name: blessed sshd_config
+      copy: 
+        src: baseline/etc_ssh/sshd_config
+        dest: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: 0600
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "sshd_key_t"
+      tags: conf
+
+    - name: blessed ssh_config 
+      copy: 
+        src: baseline/etc_ssh/ssh_config 
+        dest: /etc/ssh/ssh_config
+        owner: root
+        group: root
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "sshd_key_t"
+      tags: conf
+
+    - name: blessed moduli file
+      copy: 
+        src: baseline/etc_ssh/moduli 
+        dest: /etc/ssh/moduli 
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "sshd_key_t"
+      tags: conf
+
+    - name: sysctl hardening
+      copy: 
+        src: baseline/etc_sysctl.d/sysctl_harden.conf 
+        dest: /etc/sysctl.d/hardening.conf  
+        owner: root 
+        group: root 
+        mode: 0644   
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t"
+      tags: conf
+
+    - name: disable modprobe loading of unnessesary kernel modules
+      copy: 
+        src: baseline/etc_modprobe.d/modprobe_harden.conf 
+        dest: /etc/modprobe.d/hardening.conf 
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "modules_conf_t"
+      tags: conf
+
+    - name: set firewalld default zone 'drop' and to log unicast rejections
+      copy: 
+        src: baseline/etc_firewalld/firewalld.conf 
+        dest: /etc/firewalld/firewalld.conf 
+        owner: root 
+        group: root 
+        mode: 0640
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "modules_conf_t"
+      tags: conf
+
+    - name: blessed auditd.conf
+      copy: 
+        src: baseline/etc_audit/auditd.conf 
+        dest: /etc/audit/auditd.conf 
+        owner: root 
+        group: root 
+        mode: 0640
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "auditd_etc_t"
+      tags: conf
+
+    - name: auditd STIG/SCAP rules
+      copy: 
+        src: baseline/etc_audit/rules.d/hardening.rules 
+        dest: /etc/audit/rules.d/hardening.rules 
+        owner: root 
+        group: root 
+        mode: 0640
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "auditd_etc_t"
+      tags: conf
+
+    - name: disallow core dumps
+      copy: 
+        src: baseline/etc_security/limits.conf 
+        dest: /etc/security/limits.conf 
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t"
+      tags: conf
+
+    - name: set umask login.defs
+      copy: 
+        src: baseline/login.defs 
+        dest: /etc/login.defs 
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t"
+      tags: conf
+
+    - name: blessed /etc/pam.d/password-auth 
+      copy: 
+        src: baseline/etc_pam.d/password-auth
+        dest: /etc/pam.d/password-auth 
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t"
+      tags: conf
+
+    - name: blessed /etc/pam.d/postlogin
+      copy: 
+        src: baseline/etc_pam.d/postlogin
+        dest: /etc/pam.d/postlogin
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t"  
+      tags: conf
+
+    - name: blessed /etc/pam.d/system-auth
+      copy: 
+        src: baseline/etc_pam.d/system-auth
+        dest: /etc/pam.d/system-auth
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t" 
+      tags: conf
+    
+    - name: set ntp server address for timesyncd
+      copy: 
+        src: baseline/etc_systemd/timesyncd.conf
+        dest: /etc/systemd/timesyncd.conf   
+        owner: root 
+        group: root 
+        mode: 0644
+        seuser: "system_u"
+        serole: "object_r"
+        setype: "etc_t" 
+      tags: conf
+    
+    - name: disable ctrl-alt-del reboot
+      file:
+        state: link 
+        src: /dev/null 
+        dest: /etc/systemd/system/ctrl-alt-del.target
+      tags: conf
+
+    - name: rm /etc/securetty (1/2)
+      file: 
+        path: /etc/securetty 
+        state: absent
+      tags: conf
+
+    - name: touch /etc/securetty (2/2)
+      file: 
+        path: /etc/securetty 
+        state: touch 
+        mode: 0640
+      tags: conf
+
+    - name: check permissions on grub.cfg
+      file: 
+        path: /boot/grub2/grub.cfg 
+        mode: 0600 
+        state: file
+      tags: conf
+
+    - name: selinux deny_ptrace on
+      seboolean:
+        name: deny_ptrace
+        persistent: yes
+        state: yes
+      tags: selinux_booleans
+
+    - name: selinux deny_execmem on
+      seboolean:
+        name: deny_execmem
+        persistent: yes
+        state: yes
+      tags: selinux_booleans
+
+    - name: selinux selinuxuser_direct_dri_enabled off
+      seboolean:
+        name: selinuxuser_direct_dri_enabled
+        persistent: yes
+        state: no
+      tags: selinux_booleans
+
+    - name: selinux selinuxuser_execmod off
+      seboolean:
+        name: selinuxuser_execmod
+        persistent: yes
+        state: no
+      tags: selinux_booleans
+
+    - name: selinux selinuxuser_execstack off
+      seboolean:
+        name: selinuxuser_execstack
+        persistent: yes
+        state: no
+      tags: selinux_booleans
+
+    - name: selinux selinuxuser_ping off
+      seboolean:
+        name: selinuxuser_ping
+        persistent: yes
+        state: no
+      tags: selinux_booleans
