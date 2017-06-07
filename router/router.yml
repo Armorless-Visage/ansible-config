@@ -157,6 +157,24 @@
           validate: 'crontab -u root %s' 
       register: crontab
     
+    # snort
+    - name: /etc/snort/snort.conf
+      copy: 
+          src: "./assets/etc/snort/snort.conf"
+          dest: "/etc/snort/snort.conf"
+          mode: "u=rw,g=r,o=r"
+          backup: yes
+          validate: 'snort -T -c %s' 
+      register: snort_config
+    # snort
+    - name: /etc/snort/threshold.conf
+      copy: 
+          src: "./assets/etc/snort/threshold.conf"
+          dest: "/etc/snort/threshold.conf"
+          mode: "u=rw,g=r,o=r"
+          backup: yes
+      register: snort_threshold
+    
     # actions to be taken when above sets state changed
     #
     - name: flush and reload pf rules
