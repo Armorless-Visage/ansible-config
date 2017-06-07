@@ -1,8 +1,4 @@
-#
-SHELL=/bin/sh
-PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin
-HOME=/var/log
-#
 #minute hour    mday    month   wday    command
-#
-
+# fireplaster
+*/10 * * * * root su fireplaster -c "python3 /usr/local/lib/python3.6/site-packages/fireplaster/apps/plaster_update.py -f -d /var/db/fireplaster/fireplaster.db" >> /var/log/fireplaster.tmplog 2>&1 ; su fireplaster -c "python3 /usr/local/lib/python3.6/site-packages/fireplaster/apps/plaster_genout.py -e 86400 -d /var/db/fireplaster/fireplaster.db -o /var/db/fireplaster/fireplaster.blacklist" >> /var/log/fireplaster.tmplog 2>&1 && pfctl -a scrub_anchor -t merged_blacklist -T replace -f /var/db/fireplaster/fireplaster.blacklist >> /var/log/fireplaster.tmplog 2>&1 
+#15  3  *  *  * root 

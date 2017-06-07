@@ -11,7 +11,7 @@ table <fullbogons> const { 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8
                     198.51.100.0/24 203.0.113.0/24 224.0.0.0/4
                     240.0.0.0/4 !192.168.99.0/24}
 
-table <merged_blacklist> persist file "/usr/local/libdata/pybl/blacklist"
+table <merged_blacklist> persist file "/var/db/fireplaster/fireplaster.blacklist"
 
 match in tagged input scrub (max-mss 1460 no-df random-id reassemble tcp)
 #match in tagged torrents scrub (max-mss 1460 no-df random-id reassemble tcp)
