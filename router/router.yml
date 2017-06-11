@@ -137,14 +137,14 @@
       copy: 
           src: "./assets/var/unbound/etc/blacklist.txt"
           dest: "/var/unbound/etc/blacklist.txt"
-          mode: "u=rw,g=r"
+          mode: "u=rw,g=r,o=r"
           backup: yes
       register: blacklist
     - name: /var/unbound/etc/unbound.conf
       copy: 
           src: "./assets/var/unbound/etc/unbound.conf"
           dest: "/var/unbound/etc/unbound.conf"
-          mode: "u=rw,g=r"
+          mode: "u=rw,g=r,o=r"
           backup: yes
       register: unbound_conf
     # crontab
