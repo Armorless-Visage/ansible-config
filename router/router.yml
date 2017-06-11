@@ -140,6 +140,7 @@
           mode: "u=rw,g=r,o=r"
           backup: yes
       register: blacklist
+      tags: blacklist
     - name: /var/unbound/etc/unbound.conf
       copy: 
           src: "./assets/var/unbound/etc/unbound.conf"
