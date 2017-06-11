@@ -1,0 +1,76 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+# baseline configuration for openbsd61 servers on lan
+
+- hosts: openbsd_servers
+  remote_user: ansibleadm
+  become: yes
+  become_mathod: doas
+
+  tasks:
+    # install pf.conf
+    - name: install pf.conf
+      copy:
+        src: baseline_openbsd/etc/pf.conf
+        dst: /etc/pf.conf
+        owner: root
+        group: root
+        mode: 0600
+        validate: 'pfctl -n -f %s'
+      register: pf
+    - name: reload pf if pf.conf changed
+        command: "/sbin/pfctl -F all -f /etc/pf.conf"
+      when: pf.changed
+
+    - name: install doas.conf
+      copy:
+        src: baseline_openbsd/etc/doas.conf
+        dst: /etc/doas.conf
+        owner: root
+        group: root
+        mode: 0600
+        
+    - name: install login.conf
+      copy:
+        src: baseline_openbsd/etc/login.conf
+        dst: /etc/login.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install resolv.conf
+      copy:
+        src: baseline_openbsd/etc/resolv.conf
+        dst: /etc/resolv.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install sysctl.conf
+      copy:
+        src: baseline_openbsd/etc/sysctl.conf
+        dst: /etc/sysctl.conf
+        owner: root
+        group: root
+        mode: 0644
+
+    - name: install sshd_config
+      copy:
+        src: baseline_openbsd/etc/ssh/sshd_config
+        dst: /etc/ssh/sshd_config
+        owner: root
+        group: root
+        mode: 0644
+      register: sshd_config
+
+    - name: install ssh moduli
+      copy:
+        src: baseline_openbsd/etc/ssh/moduli
+        dst: /etc/ssh/moduli
+        owner: root
+        group: root
+        mode: 0644
+    - name: reload sshd if config changed
+        command: "/usr/sbin/rcctl restart sshd"
+      when: sshd_config.changed
+    
