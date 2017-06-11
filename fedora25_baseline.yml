@@ -1,6 +1,6 @@
 ---
 # (c) Armorless-Visage 2017 BSD 2 Clause 
-# secure baseline configuration for fedora 25
+# secure baseline_fedora configuration for fedora 25
 # loosely based on stig/scap guidelines
 
 - hosts: fedora
@@ -26,7 +26,7 @@
 
     - name: rsyslog.conf
       copy: 
-        src: baseline/rsyslog.conf
+        src: baseline_fedora/etc/rsyslog.conf
         dest: /etc/rsyslog.conf
         owner: root 
         group: root 
@@ -40,7 +40,7 @@
     
     - name: rsyslog.conf (logserver)
       copy: 
-        src: baseline/rsyslog.conf.server
+        src: baseline_fedora/etc/rsyslog.conf.server
         dest: /etc/rsyslog.conf
         owner: root 
         group: root 
@@ -70,7 +70,7 @@
     # /etc/ configuration
     - name: blessed sshd_config
       copy: 
-        src: baseline/etc_ssh/sshd_config
+        src: baseline_fedora/etc/ssh/sshd_config
         dest: /etc/ssh/sshd_config
         owner: root
         group: root
@@ -82,7 +82,7 @@
 
     - name: blessed ssh_config 
       copy: 
-        src: baseline/etc_ssh/ssh_config 
+        src: baseline_fedora/etc/ssh/ssh_config 
         dest: /etc/ssh/ssh_config
         owner: root
         group: root
@@ -94,7 +94,7 @@
 
     - name: blessed moduli file
       copy: 
-        src: baseline/etc_ssh/moduli 
+        src: baseline_fedora/etc/ssh/moduli 
         dest: /etc/ssh/moduli 
         owner: root 
         group: root 
@@ -106,19 +106,19 @@
 
     - name: sysctl hardening
       copy: 
-        src: baseline/etc_sysctl.d/sysctl_harden.conf 
+        src: baseline_fedora/etc/sysctl.d/sysctl_harden.conf 
         dest: /etc/sysctl.d/hardening.conf  
         owner: root 
         group: root 
         mode: 0644   
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t"
+        setype: "etc/t"
       tags: conf
 
     - name: disable modprobe loading of unnessesary kernel modules
       copy: 
-        src: baseline/etc_modprobe.d/modprobe_harden.conf 
+        src: baseline_fedora/etc/modprobe.d/modprobe_harden.conf 
         dest: /etc/modprobe.d/hardening.conf 
         owner: root 
         group: root 
@@ -130,7 +130,7 @@
 
     - name: set firewalld default zone 'drop' and to log unicast rejections
       copy: 
-        src: baseline/etc_firewalld/firewalld.conf 
+        src: baseline_fedora/etc/firewalld/firewalld.conf 
         dest: /etc/firewalld/firewalld.conf 
         owner: root 
         group: root 
@@ -142,98 +142,98 @@
 
     - name: blessed auditd.conf
       copy: 
-        src: baseline/etc_audit/auditd.conf 
+        src: baseline_fedora/etc/audit/auditd.conf 
         dest: /etc/audit/auditd.conf 
         owner: root 
         group: root 
         mode: 0640
         seuser: "system_u"
         serole: "object_r"
-        setype: "auditd_etc_t"
+        setype: "auditd_etc/t"
       tags: conf
 
     - name: auditd STIG/SCAP rules
       copy: 
-        src: baseline/etc_audit/rules.d/hardening.rules 
+        src: baseline_fedora/etc/audit/rules.d/hardening.rules 
         dest: /etc/audit/rules.d/hardening.rules 
         owner: root 
         group: root 
         mode: 0640
         seuser: "system_u"
         serole: "object_r"
-        setype: "auditd_etc_t"
+        setype: "auditd_etc/t"
       tags: conf
 
     - name: disallow core dumps
       copy: 
-        src: baseline/etc_security/limits.conf 
+        src: baseline_fedora/etc/security/limits.conf 
         dest: /etc/security/limits.conf 
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t"
+        setype: "etc/t"
       tags: conf
 
     - name: set umask login.defs
       copy: 
-        src: baseline/login.defs 
+        src: baseline_fedora/etc/login.defs 
         dest: /etc/login.defs 
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t"
+        setype: "etc/t"
       tags: conf
 
     - name: blessed /etc/pam.d/password-auth 
       copy: 
-        src: baseline/etc_pam.d/password-auth
+        src: baseline_fedora/etc/pam.d/password-auth
         dest: /etc/pam.d/password-auth 
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t"
+        setype: "etc/t"
       tags: conf
 
     - name: blessed /etc/pam.d/postlogin
       copy: 
-        src: baseline/etc_pam.d/postlogin
+        src: baseline_fedora/etc/pam.d/postlogin
         dest: /etc/pam.d/postlogin
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t"  
+        setype: "etc/t"  
       tags: conf
 
     - name: blessed /etc/pam.d/system-auth
       copy: 
-        src: baseline/etc_pam.d/system-auth
+        src: baseline_fedora/etc/pam.d/system-auth
         dest: /etc/pam.d/system-auth
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t" 
+        setype: "etc/t" 
       tags: conf
     
     - name: set ntp server address for timesyncd
       copy: 
-        src: baseline/etc_systemd/timesyncd.conf
+        src: baseline_fedora/etc/systemd/timesyncd.conf
         dest: /etc/systemd/timesyncd.conf   
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc_t" 
+        setype: "etc/t" 
       tags: conf
     
     - name: disable ctrl-alt-del reboot
