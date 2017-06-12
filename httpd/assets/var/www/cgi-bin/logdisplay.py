@@ -4,8 +4,14 @@
 
 from sys import stdout, exit
 from html import escape as esc
+import cgitb
 
-def print_100_lines(path):
+
+def print_100_lines(path, lines=100):
+    cgitb.enable()
+    '''
+    print last lines of file
+    '''
     header = ('Content-Type: text/html\n\n')
     html_head = ('''
     <!DOCTYPE html>
@@ -32,11 +38,10 @@ def print_100_lines(path):
         with open(path, mode='r') as logfile:
             # for the last 100 lines in the log, format and add to 
             stdout.write('<ul>')
-
             for line in logfile:
                 printable = ('<li>' + str(esc(line)) + '</li>\n')
                 all_lines.append(printable)
-            for each in all_lines[100::-1]:
+            for each in all_lines[:-100:-1]:
                 stdout.write(each)
             stdout.write('</ul>')
     except:
@@ -45,15 +50,14 @@ def print_100_lines(path):
            </body>
        </html>
     ''')
-        return 1
-    
+        exit(1)
     stdout.write(html_foot)
     return 0
 
 if __name__=='__main__':
     try:
-        file_to_print = '/var/www/html/public/testlog.log'
-        ret = print_100_lines(file_to_print)
+        file_to_print = '/var/www/html/log/snort.log'
+        ret = print_100_lines(file_to_print, lines=100)
         if ret == 0:
             exit(0)
         else:

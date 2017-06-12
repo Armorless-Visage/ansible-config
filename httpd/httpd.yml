@@ -67,7 +67,7 @@
           setype: "httpd_sys_script_exec_t"
           backup: no
       register: cgi
-      tags: apache
+      tags: ['apache', 'cgi']
 
     - name: install /etc/httpd/
       copy: 
