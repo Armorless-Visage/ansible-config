@@ -61,7 +61,7 @@
       copy: 
           src: "./assets/var/www/cgi-bin/"
           dest: "/var/www/cgi-bin/"
-          mode: "u=r,g=r,o=r"
+          mode: "u=rx,g=rx,o=rx"
           seuser: "system_u" 
           serole: "object_r"
           setype: "httpd_sys_script_exec_t"
