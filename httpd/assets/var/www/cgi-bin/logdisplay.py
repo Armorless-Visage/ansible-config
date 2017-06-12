@@ -4,11 +4,10 @@
 
 from sys import stdout, exit
 from html import escape as esc
-import cgitb
+#import cgitb
 
-
-def print_100_lines(path, lines=100):
-    cgitb.enable()
+def print_100_lines(path):
+#   cgitb.enable()
     '''
     print last lines of file
     '''
@@ -25,6 +24,7 @@ def print_100_lines(path, lines=100):
     html_foot = ('''
           </body>
        </html>
+
     ''')
     
     stdout.write(header)
@@ -37,31 +37,30 @@ def print_100_lines(path, lines=100):
         all_lines = []
         with open(path, mode='r') as logfile:
             # for the last 100 lines in the log, format and add to 
-            stdout.write('<ul>')
+            stdout.write('<ul>\n')
             for line in logfile:
                 printable = ('<li>' + str(esc(line)) + '</li>\n')
                 all_lines.append(printable)
             for each in all_lines[:-100:-1]:
                 stdout.write(each)
-            stdout.write('</ul>')
+            stdout.write('</ul>\n')
     except:
         stdout.write('''
               The program encountered a fatal error! 
            </body>
        </html>
     ''')
-        exit(1)
+        return 1
     stdout.write(html_foot)
     return 0
 
 if __name__=='__main__':
     try:
         file_to_print = '/var/www/html/log/snort.log'
-        ret = print_100_lines(file_to_print, lines=100)
+        ret = print_100_lines(file_to_print)
         if ret == 0:
             exit(0)
         else:
             exit(1)
     except (KeyboardInterrupt, SystemExit):
         exit(1)
-            
