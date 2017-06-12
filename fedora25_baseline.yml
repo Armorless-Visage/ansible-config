@@ -113,7 +113,7 @@
         mode: 0644   
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t"
+        setype: "etc_t"
       tags: conf
 
     - name: disable modprobe loading of unnessesary kernel modules
@@ -149,7 +149,7 @@
         mode: 0640
         seuser: "system_u"
         serole: "object_r"
-        setype: "auditd_etc/t"
+        setype: "auditd_etc_t"
       tags: conf
 
     - name: auditd STIG/SCAP rules
@@ -161,7 +161,7 @@
         mode: 0640
         seuser: "system_u"
         serole: "object_r"
-        setype: "auditd_etc/t"
+        setype: "auditd_etc_t"
       tags: conf
 
     - name: disallow core dumps
@@ -173,7 +173,7 @@
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t"
+        setype: "etc_t"
       tags: conf
 
     - name: set umask login.defs
@@ -185,7 +185,7 @@
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t"
+        setype: "etc_t"
       tags: conf
 
     - name: blessed /etc/pam.d/password-auth 
@@ -197,7 +197,7 @@
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t"
+        setype: "etc_t"
       tags: conf
 
     - name: blessed /etc/pam.d/postlogin
@@ -209,7 +209,7 @@
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t"  
+        setype: "etc_t"  
       tags: conf
 
     - name: blessed /etc/pam.d/system-auth
@@ -221,19 +221,19 @@
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t" 
+        setype: "etc_t" 
       tags: conf
     
     - name: set ntp server address for timesyncd
       copy: 
-        src: baseline_fedora/etc/systemd/timesyncd.conf
-        dest: /etc/systemd/timesyncd.conf   
+        src: baseline_fedora/etc/systemd_timesyncd.conf
+        dest: /etc/systemd_timesyncd.conf   
         owner: root 
         group: root 
         mode: 0644
         seuser: "system_u"
         serole: "object_r"
-        setype: "etc/t" 
+        setype: "etc_t" 
       tags: conf
     
     - name: disable ctrl-alt-del reboot
