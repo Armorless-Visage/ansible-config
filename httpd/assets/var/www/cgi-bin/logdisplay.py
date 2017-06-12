@@ -36,12 +36,12 @@ def print_100_lines(path):
             for line in logfile:
                 printable = ('<li>' + str(esc(line)) + '</li>\n')
                 all_lines.append(printable)
-            for each in all_lines[-100:]:
+            for each in all_lines[100::-1]:
                 stdout.write(each)
             stdout.write('</ul>')
     except:
         stdout.write('''
-            it fucked up
+              The program encountered a fatal error! 
            </body>
        </html>
     ''')
