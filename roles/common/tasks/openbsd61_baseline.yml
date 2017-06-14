@@ -32,7 +32,7 @@
 
 - name: install resolv.conf
   template:
-    src: resolv.conf
+    src: resolv.conf.j2
     dest: /etc/resolv.conf
     owner: 'root'
     group: 'wheel'

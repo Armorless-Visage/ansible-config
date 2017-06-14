@@ -1,0 +1,38 @@
+---
+# Liam Nolan 2017 (c)
+#
+
+    - name: install /etc/resolv.hosts
+      copy: 
+          src: "resolv.hosts"
+          dest: "/etc/resolv.hosts"
+          mode: "u=rw,g=r,o=r"
+          seuser: "system_u" 
+          serole: "object_r"
+          setype: "dnsmasq_etc_t"
+          backup: yes
+      notify:
+        - restart dnsmasq
+    - name: install /etc/dnsmasq.d
+      copy: 
+          src: "dnsmasq.d/"
+          dest: "/etc/dnsmasq.d/"
+          seuser: "system_u" 
+          serole: "object_r"
+          setype: "dnsmasq_etc_t"
+          backup: yes
+      notify:
+        - restart dnsmasq
+
+    - name: install /etc/dnsmasq.conf
+      template: 
+          src: "dnsmasq.conf.j2"
+          dest: "/etc/dnsmasq.conf"
+          mode: "u=rw,g=r,o=r"
+          seuser: "system_u" 
+          serole: "object_r"
+          setype: "dnsmasq_etc_t"
+          backup: yes
+          validate: "dnsmasq -C %s"
+      notify:
+        - restart dnsmasq

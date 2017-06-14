@@ -1,8 +1,15 @@
 # Liam Nolan 2017 (c)
 ---
 
-- hosts: local-servers
+- hosts: local-fedora-servers
   become: yes
+  become_method: sudo
+  user: ansibleadm
+  roles:
+    - common
+- hosts: local-openbsd-servers
+  become: yes
+  become_method: doas
   user: ansibleadm
   roles:
     - common
