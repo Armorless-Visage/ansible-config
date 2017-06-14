@@ -1,0 +1,45 @@
+---
+# Liam Nolan 2017 (c)
+#
+# make sure to install includes before unbound.conf so checkconf works
+- name: install /var/unbound/etc/local.zone include
+  copy: 
+      src: "local.zone"
+      dest: "/var/unbound/etc/local.zone"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+  tags: dns
+  notify:
+    - reload unbound
+
+- name: install /var/unbound/etc/fwd.zone include
+  copy: 
+      src: "fwd.zone"
+      dest: "/var/unbound/etc/fwd.zone"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+  tags: dns
+
+  # unbound-checkconf likes things inside the chroot and does not work with the
+  #  ~/.ansible_config probably can set remote_tmp(ansible.cfg) somehow for
+  #  just this one task TODO
+- name: install /var/unbound/etc/unbound.conf
+  template: 
+      src: "unbound.conf.j2"
+      dest: "/var/unbound/etc/unbound.conf"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+#      validate: 'unbound-checkconf %s'
+  tags: dns
+  notify:
+    - restart unbound
+
+# enable/start in rcctl
+- name: enable unbound
+  command: "rcctl enable unbound"
+  tags: dns
+- name: start unbound
+  command: "rcctl start unbound"
+  tags: dns
+
+

@@ -1,0 +1,5 @@
+# Liam Nolan 2017 (c)
+---
+
+- include: openbsd61.yml
+  when: ansible_distribution == "OpenBSD"

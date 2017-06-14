@@ -1,0 +1,35 @@
+module(load="imuxsock" SysSock.Use="off")  
+module(load="imjournal" StateFile="imjournal.state") 
+
+{% if syslog_server in ansible_all_ipv4_addresses %}
+template(name="TmplAuthPriv" type="string" string="/var/log/remote/auth/%HOSTNAME%/%PROGRAMNAME:::secpath-replace%.log" )
+template(name="TmplMsg" type="string" string="/var/log/remote/msg/%HOSTNAME%/%PROGRAMNAME:::secpath-replace%.log" )
+module(load="imtcp")
+ruleset(name="remote1"){ 
+    authpriv.*                    action(type="omfile" DynaFile="TmplAuthPriv")
+    *.info;mail.none;authpriv.none;cron.none    action(type="omfile" DynaFile="TmplMsg")
+}
+input(type="imtcp" port="514" ruleset="remote1")
+{% endif %}
+
+global(workDirectory="/var/lib/rsyslog")
+module(load="builtin:omfile" Template="RSYSLOG_TraditionalFileFormat")
+$IncludeConfig /etc/rsyslog.d/*.conf
+
+*.info;mail.none;authpriv.none;cron.none                /var/log/messages
+authpriv.*                                              /var/log/secure
+mail.*                                                  -/var/log/maillog
+cron.*                                                  /var/log/cron
+*.emerg                                                 :omusrmsg:*
+uucp,news.crit                                          /var/log/spooler
+local7.*                                                /var/log/boot.log
+
+{% if syslog_server not in ansible_all_ipv4_addresses %} 
+action(type="omfwd"  
+queue.filename="fwdRule2" 
+queue.maxdiskspace="1g"  
+queue.saveonshutdown="on"
+queue.type="LinkedList" 
+action.resumeRetryCount="-1"   
+Target="{{ syslog_server }}" Port="{{ syslog_port }}" Protocol="tcp")
+{% endif %}

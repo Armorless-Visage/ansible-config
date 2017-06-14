@@ -1,0 +1,23 @@
+---
+# Liam Nolan 2017 (c)
+#
+
+- name: install /etc/ntpd.conf
+  template: 
+      src: "ntpd.conf.j2"
+      dest: "/etc/ntpd.conf"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+      validate: 'ntpd -n -f %s'
+  tags: ntp
+  notify:
+    - restart openntpd
+
+- name: enable openntpd
+  command: "rcctl enable ntpd"
+  tags: ntp
+- name: start openntpd
+  command: "rcctl start ntpd"
+  tags: ntp
+
+

@@ -1,0 +1,8 @@
+# Liam Nolan 2017 (c)
+---
+
+- hosts: local-servers
+  become: yes
+  user: ansibleadm
+  roles:
+    - common

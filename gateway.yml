@@ -1,0 +1,9 @@
+# Liam Nolan 2017 (c)
+---
+
+- hosts: router
+  become: yes
+  become_method: doas
+  roles:
+    - ntp
+    - dns

@@ -1,0 +1,5 @@
+# Liam Nolan 2017 (c)
+---
+
+- include: fedora25_baseline.yml
+  when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Five"

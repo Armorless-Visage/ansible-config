@@ -1,0 +1,6 @@
+# Liam Nolan 2017 (c)
+---
+- name: restart unbound
+  command: "rcctl restart unbound"
+- name: reload unbound
+  command: "rcctl reload unbound"
