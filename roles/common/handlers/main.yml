@@ -15,4 +15,9 @@
 - name: reload sysctl
   command: "sysctl --system"
 
+- name: openbsd sshd reload
+  command: "/usr/sbin/rcctl restart sshd"
+
+- name: pf reload rules
+  command: '/sbin/pfctl -F rules -f /etc/pf.conf'
 

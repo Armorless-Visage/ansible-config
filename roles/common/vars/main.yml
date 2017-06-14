@@ -2,6 +2,7 @@
 # Liam Nolan 2017 (c) BSD 2-Clause
 #
 
+dns_servers: ['192.168.99.1', '192.168.99.24']
 syslog_server: '192.168.99.24'
 syslog_port: '514'
 ntp_servers: ['192.168.99.1', '192.168.99.24']
