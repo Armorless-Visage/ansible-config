@@ -1,6 +1,0 @@
-[Unit]
-description=Journal Remote Sink Socket
-[Socket]
-ListenStream=19532
-[Install]
-WantedBy=sockets.target 
