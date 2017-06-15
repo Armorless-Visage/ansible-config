@@ -2,6 +2,10 @@
 ---
 
 - include: fedora25_baseline.yml
+  become_method: sudo
+  become: yes
   when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Five"
 - include: openbsd61_baseline.yml
+  become_method: doas
+  become: yes
   when: ansible_distribution == "OpenBSD" and ansible_distribution_version == "6.1"

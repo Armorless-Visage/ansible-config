@@ -1,6 +1,5 @@
 ---
 # (c) Armorless-Visage 2017 BSD 2 Clause 
-# secure baseline_fedora configuration for fedora 25
 # loosely based on stig/scap guidelines
 
 - name: install system packages
@@ -8,7 +7,6 @@
       name: "{{ item }}"
       state: latest
   with_items: "{{ system_packages }}"
-  register: sys_packages
   tags: ['common', 'fedora25', 'packages']
 
 - name: start/enable system services
@@ -20,6 +18,7 @@
   with_items: "{{ system_services }}"
   tags: ['common', 'fedora25', 'services']
 
+### /etc/ configuration ###
 - name: rsyslog.conf
   template: 
     src: rsyslog.conf.j2
@@ -34,8 +33,6 @@
   notify:
     - restart rsyslog
 
-
-# /etc/ configuration
 - name: blessed sshd_config
   copy: 
     src: baseline_fedora/etc/ssh/sshd_config
@@ -239,6 +236,7 @@
     state: file
   tags: ['common', 'fedora25']
 
+### selinux booleans ###
 - name: selinux deny_ptrace on
   seboolean:
     name: deny_ptrace
