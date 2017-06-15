@@ -1,0 +1,85 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+- name: httpd packages present and updated
+  dnf: 
+      name: "{{ item }}"
+      state: latest
+  with_items: "{{ system_packages }}"
+  tags: ['httpd', 'packages']
+
+- name: install /var/www/html/index.html
+  copy: 
+      src: "assets/var/www/html/index.html"
+      dest: "/var/www/html/index.html"
+      mode: "u=r,g=r,o=r"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "httpd_sys_content_t"
+      backup: yes
+  tags: ['httpd', 'site', 'conf']
+  
+- name: install /var/www/html/style.css
+  copy: 
+      src: "assets/var/www/html/style.css"
+      dest: "/var/www/html/style.css"
+      mode: "u=r,g=r,o=r"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "httpd_sys_content_t"
+      backup: yes
+  tags: ['httpd', 'site', 'conf', 'css']
+
+- name: install /var/www/html/public/
+  copy: 
+      src: "assets/var/www/html/public/"
+      dest: "/var/www/html/public/"
+      mode: "u=r,g=r,o=r"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "httpd_sys_content_t"
+      backup: yes
+  tags: ['httpd', 'site', 'conf']
+
+- name: install /var/www/cgi-bin
+  copy: 
+      src: "assets/var/www/cgi-bin/"
+      dest: "/var/www/cgi-bin/"
+      mode: "u=rx,g=rx,o=rx"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "httpd_sys_script_exec_t"
+      backup: no
+  tags: ['httpd', 'site', 'conf', 'cgi']
+
+- name: install /etc/httpd/
+  copy: 
+      src: "assets/etc/httpd/"
+      dest: "/etc/httpd/"
+      mode: "u=r,g=r,o=r"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "httpd_config_t"
+      backup: yes
+  tags: ['httpd', 'conf']
+  notify:
+    - reload httpd
+
+- name: start/enable system services
+  systemd:
+      name: "{{ item }}"
+      state: "started"
+      enabled: "yes"
+      masked: "no"
+  with_items: "{{ system_services }}"
+  tags: ['httpd', 'conf']
+
+- name: set firewalld state (services)
+  firewalld:
+      service: "{{ item }}"
+      zone: "{{ firewalld_zone }}"
+      permanent: yes
+      state: enabled
+  with_items: "{{ firewalld_services }}"
+  tags: ['httpd', 'conf']
+

@@ -1,0 +1,7 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+system_packages: ['httpd',]
+system_services: ['httpd.service',]
+firewalld_services: ['http', 'httpd']
+firewalld_zone: 'dmz'
