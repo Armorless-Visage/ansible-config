@@ -1,0 +1,18 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+# if /etc/exports changed run exportfs -a
+- name: exportfs reload
+  command: "exportfs -a"
+
+- name: smb reload
+  systemd:
+    name: "{{ item }}"
+    state: reloaded
+  with_items: "{{ samba_services }}"
+
+- name: daemon reload
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  with_items: "{{ system_services }}"
