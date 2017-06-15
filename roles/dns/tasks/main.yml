@@ -3,7 +3,9 @@
 
 - include: openbsd61.yml
   become_method: doas
+  become: yes
   when: ansible_distribution == "OpenBSD"
 - include: fedora25.yml
   become_method: sudo
+  become: yes
   when: ansible_distribution == "Fedora"
