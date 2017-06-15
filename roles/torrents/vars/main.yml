@@ -1,0 +1,8 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+system_packages: ['transmission-daemon']
+system_services: ['transmission-daemon.service']
+firewalld_ports: ['55099/tcp']
+firewalld_zone: "dmz"
+settings_json: "/home/sshuser/ansible/torrents/assets/transmission-daemon/settings.json"
