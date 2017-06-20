@@ -3,17 +3,20 @@
 # 
 
 - name: install /etc/sysctl.d/
-  assemble: 
+  copy: 
       src: "assets/etc/sysctl.d/"
       dest: "/etc/sysctl.d/"
       mode: "u=rw,g=r,o=r"
       backup: yes
+      remote_src: no
+
 - name: assemble /etc/sysctl.conf
   assemble: 
-      src: "/etc/sysctl.d"
+      src: "/etc/sysctl.d/"
       dest: "/etc/sysctl.conf"
       mode: "u=rw,g=r,o=r"
       backup: yes
+      remote_src: yes
 
 # pf configuration 
 - name: /etc/pf.conf
@@ -25,31 +28,13 @@
   notify:
     - pf reload
 
-- name: /etc/anchor_scrub
+- name: "/etc/anchor_{{ item }}" 
   copy: 
-      src: "assets/etc/anchor_scrub"
-      dest: "/etc/anchor_scrub"
+      src: "{{ item }}"
+      dest: "/etc/"
       mode: "u=rw"
       backup: yes
-  notify:
-    - pf reload
-  
-
-- name: /etc/anchor_torrents
-  copy: 
-      src: "assets/etc/anchor_torrents"
-      dest: "/etc/anchor_torrents"
-      mode: "u=rw"
-      backup: yes
-  notify:
-    - pf reload
-
-- name: /etc/anchor_ps4
-  copy: 
-      src: "assets/etc/anchor_ps4"
-      dest: "/etc/anchor_ps4"
-      mode: "u=rw"
-      backup: yes
+  with_fileglob: "assets/etc/anchor_*"
   notify:
     - pf reload
 
