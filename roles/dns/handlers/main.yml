@@ -5,3 +5,6 @@
       name: "dnsmasq.service"
       state: "restarted"
 
+- name: reload unbound
+  command: "unbound-control reload'
+
