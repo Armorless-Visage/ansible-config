@@ -2,9 +2,9 @@
 ---
 - name: restart dnsmasq
   systemd:
-      name: "dnsmasq.service"
+      name: 'dnsmasq.service'
       state: "restarted"
 
 - name: reload unbound
-  command: "unbound-control reload'
+  command: 'unbound-control reload'
 
