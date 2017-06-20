@@ -8,7 +8,7 @@
       dest: "/etc/sysctl.d/"
       mode: "u=rw,g=r,o=r"
       backup: yes
-- name: asseble /etc/sysctl.conf
+- name: assemble /etc/sysctl.conf
   assemble: 
       src: "/etc/sysctl.d"
       dest: "/etc/sysctl.conf"
