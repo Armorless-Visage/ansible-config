@@ -32,7 +32,7 @@
 #      validate: 'unbound-checkconf %s'
   tags: dns
   notify:
-    - restart unbound
+    - reload unbound
 
 # enable/start in rcctl
 - name: enable unbound
