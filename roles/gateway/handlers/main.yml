@@ -1,0 +1,7 @@
+# Liam Nolan 2017 (c)
+---
+- name: pf reload
+  command: "pfctl -F rules -f /etc/pf.conf"
+
+- name: hostname_if change
+  command: "doas sh /etc/netstart"

@@ -1,0 +1,65 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+# 
+
+- name: install /etc/sysctl.d/
+  assemble: 
+      src: "assets/etc/sysctl.d/"
+      dest: "/etc/sysctl.d/"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+- name: asseble /etc/sysctl.conf
+  assemble: 
+      src: "/etc/sysctl.d"
+      dest: "/etc/sysctl.conf"
+      mode: "u=rw,g=r,o=r"
+      backup: yes
+
+# pf configuration 
+- name: /etc/pf.conf
+  copy: 
+      src: "assets/etc/pf.conf"
+      dest: "/etc/pf.conf"
+      mode: "u=rw"
+      backup: yes
+  notify:
+    - pf reload
+
+- name: /etc/anchor_scrub
+  copy: 
+      src: "assets/etc/anchor_scrub"
+      dest: "/etc/anchor_scrub"
+      mode: "u=rw"
+      backup: yes
+  notify:
+    - pf reload
+  
+
+- name: /etc/anchor_torrents
+  copy: 
+      src: "assets/etc/anchor_torrents"
+      dest: "/etc/anchor_torrents"
+      mode: "u=rw"
+      backup: yes
+  notify:
+    - pf reload
+
+- name: /etc/anchor_ps4
+  copy: 
+      src: "assets/etc/anchor_ps4"
+      dest: "/etc/anchor_ps4"
+      mode: "u=rw"
+      backup: yes
+  notify:
+    - pf reload
+
+- name: "/etc/hostname.{{ item }}"
+  copy: 
+      src: "{{ item }}"
+      dest: "/etc/"
+      mode: "u=rw"
+      backup: yes
+  with_fileglob: "assets/etc/hostname.*"
+  notify:
+    - hostname_if change
+

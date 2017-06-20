@@ -1,0 +1,1 @@
+inet 10.66.66.1 255.255.255.248 10.66.66.7 media parent em0 vnetid 6 lladdr 2c:3e:99:ac:d5:50 group ingress

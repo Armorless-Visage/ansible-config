@@ -1,0 +1,31 @@
+# 192.168.99.0 zone
+local-zone: "local." static
+local-zone:  "99.168.192.in-addr.arpa." static 
+
+local-data: "einstein.local. IN A 192.168.99.1"
+local-data-ptr: "192.168.99.1 einstein.local"
+
+local-data: "kerbal.local. IN A 192.168.99.2"
+local-data-ptr: "192.168.99.2 kerbal.local"
+
+local-data: "titanium.local. IN A 192.168.99.9"
+local-data-ptr: "192.168.99.9 titanium.local"
+
+local-data: "smb.local. IN A 192.168.33.99"
+local-data-ptr: "192.168.33.99 smb.local"
+
+local-data: "torrents.local. IN A 10.66.66.5"
+local-data-ptr: "10.66.66.5 torrents.local"
+
+local-data: "cobalt.local. IN A 192.168.99.100"
+local-data-ptr: "192.168.99.100 cobalt.local"
+
+local-data: "plex.local. IN A 192.168.33.7"
+local-data-ptr: "192.168.33.7 plex.local"
+
+local-data: "www.local. IN A 192.168.33.24"
+local-data: "git.local. IN A 192.168.33.24"
+local-data-ptr: "192.168.33.24 www.local"
+
+local-data: "fe.local. IN A 192.168.99.26"
+local-data-ptr: "192.168.99.26 fe.local"    

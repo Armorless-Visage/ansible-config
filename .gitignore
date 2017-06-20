@@ -5,4 +5,4 @@ roles/dns/files/*.zone
 roles/dns/files/resolv.hosts
 group_vars
 roles/apache/files/assets/var/www/html/public
-hostconfig
+definitions

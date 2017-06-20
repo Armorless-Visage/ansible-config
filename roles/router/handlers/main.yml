@@ -1,4 +1,0 @@
-# Liam Nolan 2017 (c)
----
-- name: restart openntpd
-  command: "rcctl restart ntpd"

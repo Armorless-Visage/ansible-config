@@ -1,0 +1,1 @@
+inet 10.99.99.1 255.255.255.248 10.99.99.7 media parent em0 vnetid 9 lladdr 2c:3e:99:84:a3:12 group ingress
