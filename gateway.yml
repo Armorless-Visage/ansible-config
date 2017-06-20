@@ -1,0 +1,10 @@
+# Liam Nolan 2017 (c)
+---
+
+- hosts: einstein.local
+  become: yes
+  become_method: doas
+  roles:
+    - gateway
+    - ntp
+    - dns

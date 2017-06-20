@@ -1,8 +1,0 @@
-forward-zone:
-        name: "."                               # use for ALL queries
-        forward-addr: 64.140.114.21    
-        forward-addr: 64.140.114.22    
-        forward-addr: 64.140.114.23    
-        forward-addr: 8.8.8.8    
-        forward-addr: 8.8.4.4    
-#       forward-first: yes                      # try direct if forwarder fails
