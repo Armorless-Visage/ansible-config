@@ -5,6 +5,7 @@
       name: 'dnsmasq.service'
       state: "restarted"
 
+# unbound fails (chroot problems, again...) using unbound-control reload
+# or rcctl reload so I am just restarting it for now TODO fix
 - name: reload unbound
-  command: 'unbound-control reload'
-
+  command: 'rcctl restart unbound'
