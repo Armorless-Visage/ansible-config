@@ -216,17 +216,14 @@
     dest: /etc/systemd/system/ctrl-alt-del.target
   tags: ['common', 'fedora25']
 
-- name: rm /etc/securetty (1/2)
-  file: 
-    path: /etc/securetty 
-    state: absent
-  tags: ['common', 'fedora25']
-
-- name: touch /etc/securetty (2/2)
-  file: 
-    path: /etc/securetty 
-    state: touch 
+- name: /etc/securetty
+  copy: 
+    src: "baseline_fedora/etc/securetty"
+    dest: "/etc/securetty"
     mode: 0640
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "etc_t" 
   tags: ['common', 'fedora25']
 
 - name: check permissions on grub.cfg
