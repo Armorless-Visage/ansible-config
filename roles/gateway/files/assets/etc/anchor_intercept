@@ -1,0 +1,4 @@
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+match out on egress inet proto {tcp, udp} from ingress:network to any port ntp rdr-to 192.168.99.1
+match out on egress inet proto {tcp, udp} from ingress:network to any port dns rdr-to 192.168.99.1

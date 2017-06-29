@@ -27,6 +27,7 @@
       backup: yes
   notify:
     - pf reload
+  tags: ['pf',]
 
 - name: "/etc/anchor_{{ item }}" 
   copy: 
@@ -37,6 +38,7 @@
   with_fileglob: "assets/etc/anchor_*"
   notify:
     - pf reload
+  tags: ['pf',]
 
 - name: "/etc/hostname.{{ item }}"
   copy: 
