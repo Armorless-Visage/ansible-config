@@ -1,4 +1,7 @@
 # Liam Nolan 2017 (c) BSD 2-Clause
 #
-match out on egress inet proto {tcp, udp} from ingress:network to any port ntp rdr-to 192.168.99.1
-match out on egress inet proto {tcp, udp} from ingress:network to any port dns rdr-to 192.168.99.1
+
+# special pass rule for traffic from dns servers so it doesn't loop
+pass in quick inet proto {tcp, udp} from 192.168.33.24 keep state
+# redirect local traffic round-robin to lan resolvers
+pass in quick on ingress inet proto {tcp, udp} from ingress:network to any port 53 rdr-to {192.168.99.1, 192.168.33.24} keep state
