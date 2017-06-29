@@ -49,16 +49,17 @@
 - name: install ssh moduli
   copy:
     src: baseline_openbsd/etc/ssh/moduli
-    dest: /etc/ssh/moduli
+    dest: /etc/moduli
     owner: 'root'
     group: 'wheel'
     mode: 0644
   notify:
     - openbsd sshd reload
+  tags: ['ssh',]
 
 - name: install sshd_config
-  copy:
-    src: baseline_openbsd/etc/ssh/sshd_config
+  template: 
+    src: sshd_config.j2
     dest: /etc/ssh/sshd_config
     owner: 'root'
     group: 'wheel'
@@ -66,3 +67,4 @@
     validate: 'sshd -t -f %s'
   notify:
     - openbsd sshd reload
+  tags: ['ssh',]

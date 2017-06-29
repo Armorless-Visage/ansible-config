@@ -1,8 +1,10 @@
 # Armorless-Visage 2017 (c) BSD 2-Clause
 Port 22
 #AddressFamily any
-ListenAddress 192.168.99.1
-#ListenAddress ::
+{% for address in ansible_all_ipv4_addresses %}
+ListenAddress {{ address }}
+{% endfor %}
+
 HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
 LoginGraceTime 2m
@@ -49,6 +51,10 @@ PermitTunnel no
 
 # override default of no subsystems
 Subsystem	sftp	/usr/libexec/sftp-server
+
+KexAlgorithms   curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+Ciphers         chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes128-ctr
+MACs            hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160
 
 # Example of overriding settings on a per-user basis
 #Match User anoncvs
