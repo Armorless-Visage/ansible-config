@@ -39,7 +39,7 @@
       masked: "no"
   with_items: "{{ system_services }}"
 
-- name: set firewalld state
+- name:  firewalld ports
   firewalld:
       service: "{{ item }}"
       zone: "{{ firewalld_zone }}"
