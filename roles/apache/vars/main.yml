@@ -3,5 +3,5 @@
 #
 system_packages: ['httpd',]
 system_services: ['httpd.service',]
-firewalld_services: ['http', 'httpd']
+firewalld_services: ['http', 'https']
 firewalld_zone: 'dmz'

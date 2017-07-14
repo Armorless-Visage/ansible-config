@@ -39,7 +39,7 @@
       serole: "object_r"
       setype: "httpd_sys_content_t"
       backup: yes
-  tags: ['httpd', 'site', 'conf']
+  tags: ['httpd', 'site', 'conf', 'public']
 
 - name: install /var/www/cgi-bin
   copy: 
