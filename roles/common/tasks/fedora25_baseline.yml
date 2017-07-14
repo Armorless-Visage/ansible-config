@@ -86,8 +86,8 @@
     serole: "object_r"
     setype: "etc_t"
   tags: ['common', 'fedora25', 'sysctl']
-  notify:
-    - reload sysctl
+#  notify:
+#    - reload sysctl
 
 - name: disable modprobe loading of unnessesary kernel modules
   copy: 
