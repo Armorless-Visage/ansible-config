@@ -5,7 +5,7 @@ table <fullbogons> const { 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8
                     169.254.0.0/16 127.16.0.0/12 192.0.0.0/24
                     192.0.2.0/24 192.168.0.0/16 198.18.0.0/15
                     198.51.100.0/24 203.0.113.0/24 224.0.0.0/4
-                    240.0.0.0/4 !192.168.99.0/24}
+                    240.0.0.0/4 10.66.66.4 }
 
 table <merged_blacklist> persist file "/var/db/fireplaster/fireplaster.blacklist"
 
@@ -15,7 +15,7 @@ match in tagged input scrub (max-mss 1460 no-df random-id reassemble tcp) tag sc
 # block spoofed packets
 antispoof log quick for ingress inet 
 antispoof log quick for egress inet
-block in quick from urpf-failed 
+block in from urpf-failed tag urpf
 
 block in log (all, to pflog0) quick on egress from <merged_blacklist> to any 
 block return out log (all, to pflog0) quick on egress from any to <merged_blacklist>

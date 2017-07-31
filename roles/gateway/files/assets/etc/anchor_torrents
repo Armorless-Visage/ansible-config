@@ -6,3 +6,7 @@ match in on vlan6 from $torrents_ip tag torrents
 match out on egress inet tagged torrents nat-to (egress:0) static-port 
 pass in quick on egress inet proto {tcp, udp} from any to (egress:0) port 54977 rdr-to $torrents_ip port 54977 modulate state set queue (torrents, torrents)
 pass out quick on egress inet proto {tcp, udp} from $torrents_ip modulate state set queue (torrents, torrents)
+
+# fq
+#pass in quick on egress inet proto {tcp, udp} from any to (egress:0) port 54977 rdr-to $torrents_ip port 54977 modulate state
+#pass out quick on egress inet proto {tcp, udp} from $torrents_ip modulate state
