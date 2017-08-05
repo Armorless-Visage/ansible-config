@@ -1,0 +1,7 @@
+# Liam Nolan 2017 (c)
+---
+
+- include: openbsd61.yml
+  become_method: doas
+  become: yes
+  when: ansible_distribution == "OpenBSD"

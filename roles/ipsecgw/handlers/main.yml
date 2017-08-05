@@ -1,0 +1,4 @@
+# Liam Nolan 2017 (c)
+---
+- name: reload iked
+  command: "ikectl reload"

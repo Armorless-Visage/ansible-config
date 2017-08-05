@@ -1,0 +1,26 @@
+---
+# Liam Nolan 2017 (c)
+#
+
+- name: install /etc/iked.conf
+  copy: 
+      src: "iked.conf.protected"
+      dest: "/etc/iked.conf"
+      mode: "u=rw"
+      backup: yes
+      validate: 'iked -n -f %s'
+  tags: ipsec
+  notify:
+    - reload iked
+
+- name: enable ikedd
+  command: "rcctl enable iked"
+  tags: ipsec
+- name: enable ipsec
+  command: "rcctl enable ipsec"
+  tags: ipsec
+- name: start iked
+  command: "rcctl start iked"
+  tags: ntp
+
+
