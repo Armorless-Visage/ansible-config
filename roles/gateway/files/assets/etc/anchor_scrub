@@ -10,7 +10,7 @@ table <fullbogons> const { 0.0.0.0/8 10.0.0.0/8 100.64.0.0/10 127.0.0.0/8
 table <merged_blacklist> persist file "/var/db/fireplaster/fireplaster.blacklist"
 
 # scrub
-match in tagged input scrub (max-mss 1460 no-df random-id reassemble tcp) tag scrubbed
+match in all scrub (max-mss 1460 no-df random-id reassemble tcp) tag scrubbed
 
 # block spoofed packets
 antispoof log quick for ingress inet 

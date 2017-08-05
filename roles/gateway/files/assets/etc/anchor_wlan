@@ -1,20 +1,11 @@
 # Liam Nolan 2017 (c) BSD 2-Clause
 
 allowed_ports = "{80,443,21,53}"
-table <ipsec_net> const { 192.168.168.5 10.168.168.3 10.168.168.1 }
+ipsec_ports = "{500, 4500}"
 
-#match in on enc0 scrub (max-mss 1380)
-#pass quick on enc0 keep state (if-bound)
 
-match out on egress from <ipsec_net> to any nat-to (egress:0) tag wlan_nat
-#pass out on egress tagged wlan_nat
+pass in on wlan inet proto udp from wlan:network to wlan port $ipsec_ports keep state
+pass in on wlan inet proto esp from wlan:network to wlan keep state
 
-pass in on vlan12 inet proto udp from <ipsec_net> to 10.168.168.1 port {500, 4500} keep state
-pass in on vlan12 inet proto esp from <ipsec_net> to 10.168.168.1 keep state
-
-pass in on vlan12 inet proto {tcp,udp} from <ipsec_net> to any port $allowed_ports keep state
-
-#pass in log  on vlan12 inet proto tcp from any to any port $allowed_ports tagged wireless keep state
-#pass in log  on vlan12 inet proto {tcp,udp} from <ipsec_net> to self port 53 keep state
-pass out on vlan12 inet proto {tcp,udp,esp} keep state
-#pass out  on vlan12 inet proto {tcp,udp} from any to <ipsec_net> keep state
+pass in on wlan inet proto {tcp,udp} from wlan:network to any port $allowed_ports tag ingress-traffic keep state
+pass out on wlan inet proto {tcp,udp,esp} keep state

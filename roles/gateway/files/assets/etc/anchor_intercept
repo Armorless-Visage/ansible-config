@@ -1,5 +1,8 @@
 dns_servers = "{192.168.33.24, 192.168.99.1}"
 
+# plex likes traffic on the same subnet as itself
+match out on vlan3 inet proto {tcp, udp} from any to 192.168.33.7 port 32400 tagged ingress-traffic nat-to (vlan3:0)
+
 # special pass rule for dns traffic from dns servers so the path does not loop
 pass in quick inet proto {tcp, udp} from $dns_servers to any port 53 tagged ingress-traffic keep state
 
