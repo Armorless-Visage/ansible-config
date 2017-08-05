@@ -1,0 +1,40 @@
+# Liam Nolan 2017 (c) BSD 2-Clause
+
+admin = "10.99.99.6"
+
+icmp_pass = "{ echoreq, trace, unreach }"
+
+# ports open on self
+tcp_ports = "{ 53 }"
+udp_ports = "{ 53, 67, 123, 500, 4500 }"
+
+httpd_server = "192.168.33.33"
+httpd_port = "{80, 443}"
+
+plex_server = "192.168.33.7"
+plex_port = "32400"
+
+log_server = "192.168.33.33"
+log_port = "514"
+
+file_server = "192.168.33.21"
+file_udp_port = "{137, 138}"
+file_tcp_port = "{139, 445, 2049}"
+
+
+# pass internal traffic to self on used ports
+pass in quick inet proto tcp from any to self port $tcp_ports tagged ingress-traffic keep state
+pass in quick inet proto udp from any to self port $udp_ports tagged ingress-traffic keep state
+# allow some icmp types to self
+pass in quick inet proto icmp from any to self icmp-type $icmp_pass tagged ingress-traffic keep state
+
+# pass traffic to lan
+# plex
+pass out quick inet proto tcp from any to $plex_server port $plex_port tagged ingress-network keep state
+pass out quick inet proto tcp from any to $httpd_server port $httpd_port tagged ingress-network keep state
+pass out quick inet proto tcp from any to $log_server port $log_port tagged ingress-network keep state
+pass out quick inet proto tcp from any to $file_server port $file_tcp_port tagged ingress-network keep state
+pass out quick inet proto udp from any to $file_server port $file_udp_port tagged ingress-network keep state
+pass out quick inet proto tcp from $admin to any port ssh keep state
+# allow from self to internal networks
+pass out quick inet from self to ingress:network keep state

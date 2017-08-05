@@ -1,13 +1,14 @@
-# Liam Nolan 2017 (c) BSD 2-Clause
-#
 dns_servers = "{192.168.33.24, 192.168.99.1}"
 
 # special pass rule for dns traffic from dns servers so the path does not loop
-pass in quick on ingress inet proto {tcp, udp} from $dns_servers to any port 53 keep state
+pass in quick inet proto {tcp, udp} from $dns_servers to any port 53 tagged ingress-traffic keep state
 
 # allow lan traffic to pass to lan dns servers
-pass in quick on ingress inet proto {tcp, udp} from ingress:network to $dns_servers port 53 keep state
+pass in quick inet proto {tcp, udp} from any to $dns_servers port 53 tagged ingress-traffic keep state
 
 # redirect dns traffic going outbound round-robin to lan resolvers
 #pass in quick on ingress inet proto {tcp, udp} from ingress:network to any port 53 rdr-to $dns_servers keep state
-pass in quick on ingress inet proto {tcp, udp} from ingress:network to any port 53 rdr-to 192.168.99.1 keep state
+pass in quick inet proto {tcp, udp} from ingress:network to any port 53 tagged ingress-traffic rdr-to 192.168.99.1 keep state
+pass in quick on vlan12 inet proto {tcp, udp} from wlan:network to any port 53 rdr-to 192.168.99.1 keep state
+pass in quick inet proto {tcp, udp} from ingress:network to any port 123 tagged ingress-traffic rdr-to 192.168.99.1 keep state
+pass in quick on vlan12 inet proto {tcp, udp} from wlan:network to any port 123 rdr-to 192.168.99.1 keep state

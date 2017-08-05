@@ -1,12 +1,19 @@
 # Liam Nolan 2016 - halon
 
 torrents_ip="10.66.66.5"
+external_port="54977"
+remote_mgmt="9091"
 
+# match torrent traffic and nat it without pat
 match in on vlan6 from $torrents_ip tag torrents
-match out on egress inet tagged torrents nat-to (egress:0) static-port 
-pass in quick on egress inet proto {tcp, udp} from any to (egress:0) port 54977 rdr-to $torrents_ip port 54977 modulate state set queue (torrents, torrents)
-pass out quick on egress inet proto {tcp, udp} from $torrents_ip modulate state set queue (torrents, torrents)
+match out on egress inet tagged torrents nat-to (egress:0) static-port
 
-# fq
-#pass in quick on egress inet proto {tcp, udp} from any to (egress:0) port 54977 rdr-to $torrents_ip port 54977 modulate state
-#pass out quick on egress inet proto {tcp, udp} from $torrents_ip modulate state
+# internal traffic pass to transmission-remote
+pass in quick inet proto tcp from any to $torrents_ip port $remote_mgmt tagged ingress-traffic keep state 
+
+# external traffic port-forward
+pass in quick on egress inet proto {tcp, udp} from any to (egress:0) port $external_port rdr-to $torrents_ip port $external_port modulate state set queue (torrents, torrents) tag torrents_in
+
+# pass out to/from torrent server
+pass out quick on egress inet proto {tcp, udp} from $torrents_ip modulate state set queue (torrents, torrents)
+pass out quick on vlan6 inet proto {tcp,udp} from any to $torrents_ip port $external_port tagged torrents_in keep state

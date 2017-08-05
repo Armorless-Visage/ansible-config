@@ -1,7 +1,7 @@
 # Liam Nolan 2016 - halon
 
 ps4_ip="192.168.99.20"
-match in on ingress from $ps4_ip tag ps4
+match in on em0 from $ps4_ip tag ps4
 # No PAT
 match out on egress inet tagged ps4 nat-to (egress:0) static-port
 # With PAT
