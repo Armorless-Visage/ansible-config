@@ -1,0 +1,52 @@
+# Liam Nolan 2017 (c) BSD 2-Clause
+
+admin = "10.99.99.6"
+
+icmp_pass = "{ echoreq, trace, unreach }"
+
+# ports open on self
+tcp_ports = "{ 53 }"
+udp_ports = "{ 53, 67, 123, 500, 4500 }"
+
+httpd_server = "192.168.33.33"
+httpd_port = "{80, 443}"
+
+plex_server = "192.168.33.7"
+plex_tcp_port = "{3005,32400,32469}"
+plex_udp_port = "1900"
+
+log_server = "192.168.33.33"
+log_port = "514"
+
+file_server = "192.168.33.21"
+file_udp_port = "{137, 138, rpcbind}"
+file_tcp_port = "{139, 445, 2049, rpcbind}"
+
+torrent_server = "10.66.66.5"
+torrent_ui_port = "9091"
+
+match in on ingress inet proto {tcp,udp,icmp} from ingress:network to !(self) tagged scrubbed tag ingress-traffic
+match out on vlan3 inet proto {tcp, udp} from any to 192.168.33.7 port 32400 tagged ingress-traffic nat-to (vlan3:0)
+block in quick on private from any to ingress:network
+pass in on ingress inet proto tcp from any to self port $tcp_ports keep state
+pass in on ingress inet proto udp from any to self port $udp_ports keep state
+# pass in/out to internal interfaces
+pass in tagged ingress-traffic keep state
+pass in inet proto tcp from any to self port $tcp_ports keep state
+pass in inet proto udp from any to self port $udp_ports keep state
+pass in inet proto icmp from any to ingress:network icmp-type echoreq tagged ingress-traffic keep state
+
+
+# pass traffic to lan
+pass out quick on vlan3 inet proto tcp from any to $plex_server port $plex_tcp_port keep state
+pass out quick on vlan3 inet proto udp from any to $plex_server port $plex_udp_port keep state
+pass out quick on vlan3 inet proto tcp from any to $httpd_server port $httpd_port keep state
+pass out quick on vlan3 inet proto tcp from any to $log_server port $log_port keep state
+pass out quick on vlan3 inet proto tcp from any to $file_server port $file_tcp_port keep state
+pass out quick on vlan3 inet proto udp from any to $file_server port $file_udp_port keep state
+pass out quick on vlan6 inet proto {tcp,udp} from any to $torrent_server port $torrent_ui_port keep state
+# ssh
+pass out quick inet proto tcp from $admin to any port ssh keep state
+# allow from internal to internal
+#pass out inet from any to ingress:network tagged ingress-traffic keep state
+pass out inet proto icmp from any to ingress:network icmp-type echoreq tagged ingress-traffic keep state

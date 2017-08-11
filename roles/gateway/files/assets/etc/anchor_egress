@@ -1,0 +1,18 @@
+#     Vars     ##
+web_ports = "{ 80, 443, 21, 8080 }"
+hi_ports = "{ 1025:65535 }"
+lo_ports = "{ 1:1024 }"
+
+egress_icmp = "{echoreq, trace}"
+
+# masq outbound traffic
+match out on egress inet tagged ingress-traffic nat-to (egress:0)
+
+# set upload queues and allow traffic outbound
+pass out on egress inet proto {tcp, udp} to port $lo_ports modulate state set queue (low, top)
+pass out on egress inet proto {tcp, udp} to port $hi_ports modulate state set queue (hi, top)
+pass out on egress inet proto {tcp, udp} to port 53 modulate state set queue (dns, dns)
+pass out on egress inet proto udp to port 123 modulate state set queue (ntp, ntp)
+pass out on egress inet proto tcp to port $web_ports modulate state set queue (web, top)
+# allow approved icmp types out
+pass out on egress inet proto icmp all icmp-type $egress_icmp keep state set queue (std, top)
