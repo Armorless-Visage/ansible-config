@@ -26,7 +26,8 @@ torrent_server = "10.66.66.5"
 torrent_ui_port = "9091"
 
 match in on ingress inet proto {tcp,udp,icmp} from ingress:network to !(self) tagged scrubbed tag ingress-traffic
-match out on vlan3 inet proto {tcp, udp} from any to 192.168.33.7 port 32400 tagged ingress-traffic nat-to (vlan3:0)
+match out on vlan3 inet proto {tcp, udp} from any to 192.168.33.7 port 32400 nat-to (vlan3:0)
+#match out on vlan6 inet proto {tcp, udp} from any to 10.66.66.4 port 22 nat-to (vlan3:0)
 block in quick on private from any to ingress:network
 pass in on ingress inet proto tcp from any to self port $tcp_ports keep state
 pass in on ingress inet proto udp from any to self port $udp_ports keep state
@@ -35,7 +36,6 @@ pass in tagged ingress-traffic keep state
 pass in inet proto tcp from any to self port $tcp_ports keep state
 pass in inet proto udp from any to self port $udp_ports keep state
 pass in inet proto icmp from any to ingress:network icmp-type echoreq tagged ingress-traffic keep state
-
 
 # pass traffic to lan
 pass out quick on vlan3 inet proto tcp from any to $plex_server port $plex_tcp_port keep state

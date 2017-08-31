@@ -15,7 +15,7 @@ match in all scrub (max-mss 1460 no-df random-id reassemble tcp) tag scrubbed
 # block spoofed packets
 antispoof log quick for ingress inet 
 antispoof log quick for egress inet
-block in from urpf-failed tag urpf
+block in log from urpf-failed tag urpf
 
 block in log (all, to pflog0) quick on egress from <merged_blacklist> to any 
 block return out log (all, to pflog0) quick on egress from any to <merged_blacklist>
@@ -23,6 +23,6 @@ block in log (all, to pflog0) quick on egress from <fullbogons> to any
 block return out log quick on egress from any to <fullbogons> 
 
 # don't allow outgoing mail
-block out quick on egress inet proto {tcp udp} from any to any port 25
+block out log quick on egress inet proto {tcp udp} from any to any port 25
 # By default, do not permit remote connections to X11
-block in quick on ! lo0 proto tcp to port 6000:6010
+block in log quick on ! lo0 proto tcp to port 6000:6010

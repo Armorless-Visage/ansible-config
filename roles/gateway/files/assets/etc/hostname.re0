@@ -1,1 +1,3 @@
-dhcp lladdr 80:04:a1:f7:ea:c3
+dhcp description "Egress Network" lladdr 2c:e2:66:4e:e7:54 group outbound
+#dhcp lladdr 80:04:a1:f7:ea:c3
+

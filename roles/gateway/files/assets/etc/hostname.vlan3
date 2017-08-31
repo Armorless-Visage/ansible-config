@@ -1,1 +1,1 @@
-inet 192.168.33.1 255.255.255.0 192.168.33.255 media parent em0 vnetid 3 lladdr 5c:3c:c5:97:66:76 group ingress
+inet 192.168.33.1 255.255.255.0 192.168.33.255 description "Server traffic" media parent em0 vnetid 3 lladdr 5c:3c:c5:97:66:76 group ingress
