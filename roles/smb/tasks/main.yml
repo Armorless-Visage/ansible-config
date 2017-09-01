@@ -6,18 +6,6 @@
       state: latest
   with_items: "{{ system_packages }}"
 
-- name: install /etc/exports
-  copy: 
-      src: "assets/exports"
-      dest: "/etc/exports"
-      mode: "u=rw,g=r,o=r"
-      seuser: "system_u" 
-      serole: "object_r"
-      setype: "exports_t"
-      backup: yes
-  notify:
-    - exportfs reload
-
 - name: install /etc/samba/smb.conf
   copy: 
       src: "assets/smb.conf"
@@ -27,6 +15,7 @@
       serole: "object_r"
       setype: "samba_etc_t"
       backup: yes
+      validate: "testparm %s"
   notify:
     - smb reload
 

@@ -3,8 +3,8 @@
 #
 system_packages: ['samba', 'samba-libs', 'samba-common']
 # required services
-system_services: ['smb.service', 'nfs.service', 'rpcbind.service', 'nmb.service']
+system_services: ['smb.service', 'nmb.service']
 samba_services: ['smb.service', 'nmb.service']
 # firewalld conf 
-firewalld_services: ['ssh', 'samba', 'nfs']
+firewalld_services: ['ssh', 'samba']
 firewalld_zone: "dmz"
