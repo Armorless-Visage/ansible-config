@@ -11,6 +11,7 @@
           serole: "object_r"
           setype: "dnsmasq_etc_t"
           backup: yes
+      tags: ['dns']
       notify:
         - restart dnsmasq
     - name: install /etc/dnsmasq.d
@@ -21,6 +22,7 @@
           serole: "object_r"
           setype: "dnsmasq_etc_t"
           backup: yes
+      tags: ['dns']
       notify:
         - restart dnsmasq
 
@@ -33,6 +35,14 @@
           serole: "object_r"
           setype: "dnsmasq_etc_t"
           backup: yes
-          validate: "dnsmasq -C %s"
+      tags: ['dns']
       notify:
         - restart dnsmasq
+
+    - name: set firewalld ports
+      firewalld:
+          service: "dns"
+          zone: "{{ firewalld_zone }}"
+          permanent: "yes"
+          state: "enabled"
+      tags: ['firewall', 'dns']
