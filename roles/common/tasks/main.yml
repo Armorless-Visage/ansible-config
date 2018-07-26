@@ -9,3 +9,7 @@
   become_method: doas
   become: yes
   when: ansible_distribution == "OpenBSD" and ansible_distribution_version == "6.1"
+- include: fedora25_baseline.yml
+  become_method: sudo
+  become: yes
+  when: ansible_distribution == "CentOS" and ansible_distribution_release == "7"
