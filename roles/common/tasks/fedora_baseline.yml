@@ -7,32 +7,32 @@
       name: "{{ item }}"
       state: latest
   with_items: "{{ system_packages }}"
-  tags: ['common', 'fedora25', 'packages']
-
-- name: start/enable system services
-  systemd:
-      name: "{{ item }}"
-      state: "started"
-      enabled: "yes"
-      masked: "no"
-  with_items: "{{ system_services }}"
-  tags: ['common', 'fedora25', 'services']
+  tags: ['common', 'fedora', 'packages']
+#
+#- name: start/enable system services
+#  systemd:
+#      name: "{{ item }}"
+#      state: "started"
+#      enabled: "yes"
+#      masked: "no"
+#  with_items: "{{ system_services }}"
+#  tags: ['common', 'fedora', 'services']
 
 ### /etc/ configuration ###
-- name: rsyslog.conf
-  template: 
-    src: rsyslog.conf.j2
-    dest: /etc/rsyslog.conf
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "syslog_conf_t" 
-  tags: ['common', 'fedora25', 'syslog']
-  notify:
-    - restart rsyslog
-
+#- name: rsyslog.conf
+#  template: 
+#    src: rsyslog.conf.j2
+#    dest: /etc/rsyslog.conf
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "syslog_conf_t" 
+#  tags: ['common', 'fedora', 'syslog']
+#  notify:
+#    - restart rsyslog
+#
 - name: blessed sshd_config
   copy: 
     src: baseline_fedora/etc/ssh/sshd_config
@@ -43,7 +43,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "sshd_key_t"
-  tags: ['common', 'fedora25', 'ssh']
+  tags: ['common', 'fedora', 'ssh']
   notify:
     - reload sshd
 
@@ -57,24 +57,24 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "sshd_key_t"
-  tags: ['common', 'fedora25', 'ssh']
+  tags: ['common', 'fedora', 'ssh']
   notify:
     - reload sshd
 
-- name: blessed moduli file
-  copy: 
-    src: baseline_fedora/etc/ssh/moduli 
-    dest: /etc/ssh/moduli 
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "sshd_key_t"
-  tags: ['common', 'fedora25', 'ssh']
-  notify:
-    - reload sshd
-
+#- name: blessed moduli file
+#  copy: 
+#    src: baseline_fedora/etc/ssh/moduli 
+#    dest: /etc/ssh/moduli 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "sshd_key_t"
+#  tags: ['common', 'fedora', 'ssh']
+#  notify:
+#    - reload sshd
+#
 - name: sysctl hardening
   copy: 
     src: baseline_fedora/etc/sysctl.d/sysctl_harden.conf 
@@ -85,7 +85,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "etc_t"
-  tags: ['common', 'fedora25', 'sysctl']
+  tags: ['common', 'fedora', 'sysctl']
 #  notify:
 #    - reload sysctl
 
@@ -99,7 +99,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "modules_conf_t"
-  tags: ['common', 'fedora25', 'modules']
+  tags: ['common', 'fedora', 'modules']
 
 - name: set firewalld default zone 'drop' and to log unicast rejections
   copy: 
@@ -111,7 +111,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "modules_conf_t"
-  tags: ['common', 'fedora25', 'firewalld']
+  tags: ['common', 'fedora', 'firewalld']
 
 - name: blessed auditd.conf
   copy: 
@@ -123,7 +123,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "auditd_etc_t"
-  tags: ['common', 'fedora25', 'auditd']
+  tags: ['common', 'fedora', 'auditd']
 
 - name: auditd STIG/SCAP rules
   copy: 
@@ -135,7 +135,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "auditd_etc_t"
-  tags: ['common', 'fedora25', 'auditd']
+  tags: ['common', 'fedora', 'auditd']
 
 - name: disallow core dumps
   copy: 
@@ -147,7 +147,7 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "etc_t"
-  tags: ['common', 'fedora25']
+  tags: ['common', 'fedora']
 
 - name: set umask login.defs
   copy: 
@@ -159,43 +159,46 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "etc_t"
-  tags: ['common', 'fedora25']
+  tags: ['common', 'fedora']
 
-- name: blessed /etc/pam.d/password-auth 
-  copy: 
-    src: baseline_fedora/etc/pam.d/password-auth
-    dest: /etc/pam.d/password-auth 
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "etc_t"
-  tags: ['common', 'fedora25']
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/password-auth 
+#  copy: 
+#    src: baseline_fedora/etc/pam.d/password-auth
+#    dest: /etc/pam.d/password-auth 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t"
+#  tags: ['common', 'fedora']
 
-- name: blessed /etc/pam.d/postlogin
-  copy: 
-    src: baseline_fedora/etc/pam.d/postlogin
-    dest: /etc/pam.d/postlogin
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "etc_t"  
-  tags: ['common', 'fedora25']
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/postlogin
+#  copy: 
+#    src: baseline_fedora/etc/pam.d/postlogin
+#    dest: /etc/pam.d/postlogin
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t"  
+#  tags: ['common', 'fedora']
 
-- name: blessed /etc/pam.d/system-auth
-  copy: 
-    src: baseline_fedora/etc/pam.d/system-auth
-    dest: /etc/pam.d/system-auth
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "etc_t" 
-  tags: ['common', 'fedora25']
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/system-auth
+#  copy: 
+#    src: baseline_fedora/etc/pam.d/system-auth
+#    dest: /etc/pam.d/system-auth
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t" 
+#  tags: ['common', 'fedora']
 
 - name: set ntp server address for timesyncd
   template: 
@@ -207,14 +210,14 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "etc_t" 
-  tags: ['common', 'fedora25']
+  tags: ['common', 'fedora']
 
 - name: disable ctrl-alt-del reboot
   file:
     state: link 
     src: /dev/null 
     dest: /etc/systemd/system/ctrl-alt-del.target
-  tags: ['common', 'fedora25']
+  tags: ['common', 'fedora']
 
 - name: /etc/securetty
   copy: 
@@ -224,14 +227,15 @@
     seuser: "system_u"
     serole: "object_r"
     setype: "etc_t" 
-  tags: ['common', 'fedora25']
+  tags: ['common', 'fedora']
 
-- name: check permissions on grub.cfg
-  file: 
-    path: /boot/grub2/grub.cfg 
-    mode: 0600 
-    state: file
-  tags: ['common', 'fedora25']
+# TODO check bios/efi and select path appropriately
+#- name: check permissions on grub.cfg
+#  file: 
+#    path: /boot/grub2/grub.cfg 
+#    mode: 0600 
+#    state: file
+#  tags: ['common', 'fedora']
 
 ### selinux booleans ###
 - name: selinux deny_ptrace on
@@ -239,39 +243,39 @@
     name: deny_ptrace
     persistent: yes
     state: yes
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']
 
 - name: selinux deny_execmem on
   seboolean:
     name: deny_execmem
     persistent: yes
     state: yes
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']
 
 - name: selinux selinuxuser_direct_dri_enabled off
   seboolean:
     name: selinuxuser_direct_dri_enabled
     persistent: yes
     state: no
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']
 
 - name: selinux selinuxuser_execmod off
   seboolean:
     name: selinuxuser_execmod
     persistent: yes
     state: no
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']
 
 - name: selinux selinuxuser_execstack off
   seboolean:
     name: selinuxuser_execstack
     persistent: yes
     state: no
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']
 
 - name: selinux selinuxuser_ping off
   seboolean:
     name: selinuxuser_ping
     persistent: yes
     state: no
-  tags: ['common', 'fedora25', 'selinux']
+  tags: ['common', 'fedora', 'selinux']

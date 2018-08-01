@@ -10,6 +10,6 @@ system_packages: ['rsyslog', 'vim', 'tar', 'python', 'ansible',
                     'python2-dnf', 'libselinux', 'selinux-policy',
                     'selinux-policy-sandbox', 'selinux-policy-targeted',
                     'policycoreutils-python', 'policycoreutils-python-utils',
-                    'python-firewall']
+                    'python3-firewall']
 system_services: ['rsyslog.service']
 
