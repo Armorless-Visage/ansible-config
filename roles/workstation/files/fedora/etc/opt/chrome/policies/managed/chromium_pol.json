@@ -18,12 +18,11 @@
 	"ExtensionInstallBlacklist": ["*"],
 	"ExtensionInstallWhitelist": ["cjpalhdlnbpafiamejdnhcphjbkeiagm", "eemcgdkfndhakfknompkggombfjjjeno", "kmendfapggjehodndflmmgagdbamhnfd", "ahfgeienlihckogmohjhadlkjgocpleb"],
 	"ExtensionInstallForcelist": ["cjpalhdlnbpafiamejdnhcphjbkeiagm;https://clients2.google.com/service/update2/crx"],
-	"3rdparty": {
-		"extensions": {
-			"cjpalhdlnbpafiamejdnhcphjbkeiagm": {
-				"adminSettings": "{\"userSettings\":{\"advancedUserEnabled\":true,\"cloudStorageEnabled\":false,\"webrtcIPAddressHidden\":true},\"dynamicFilteringString\":\"behind-the-scene * 3p-frame noop\\nbehind-the-scene * 3p noop\\n* * * block\\n* * inline-script block\\n* * 1p-script block\\n* * 3p-script block\\n* * 3p-frame block\\n* * 3p block\\n\",\"hostnameSwitchesString\":\"no-remote-fonts: * true\"}}"
-			}		
-		}
-	}
-
+        "3rdparty": {
+	    "extensions": {
+	        "cjpalhdlnbpafiamejdnhcphjbkeiagm": {
+                    "adminSettings": "{\"userSettings\":{\"advancedUserEnabled\":true,\"cloudStorageEnabled\":false,\"webrtcIPAddressHidden\":true},\"dynamicFilteringString\":\"behind-the-scene * 3p-frame noop\\nbehind-the-scene * 3p noop\\n* * * block\\n* * inline-script block\\n* * 1p-script block\\n* * 3p-script block\\n* * 3p-frame block\\n* * 3p block\\n\",\"hostnameSwitchesString\":\"no-remote-fonts: * true\"}"
+                }
+            }
+        }
 }
