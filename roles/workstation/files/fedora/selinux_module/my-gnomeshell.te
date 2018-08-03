@@ -1,0 +1,18 @@
+
+module my-gnomeshell 1.0;
+
+require {
+	type unconfined_t;
+	type xdm_t;
+	class process execmem;
+}
+
+#============= unconfined_t ==============
+
+#!!!! This avc can be allowed using the boolean 'deny_execmem'
+allow unconfined_t self:process execmem;
+
+#============= xdm_t ==============
+
+#!!!! This avc is allowed in the current policy
+allow xdm_t self:process execmem;

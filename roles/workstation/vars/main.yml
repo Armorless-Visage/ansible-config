@@ -1,0 +1,15 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+
+dns_servers: ['192.168.99.1', '192.168.33.24']
+syslog_server: '192.168.33.33'
+syslog_port: '514'
+ntp_servers: ['192.168.99.1', '192.168.33.24']
+system_packages: ['rsyslog', 'vim', 'tar', 'python', 'ansible',
+                    'python2-dnf', 'libselinux', 'selinux-policy',
+                    'selinux-policy-sandbox', 'selinux-policy-targeted',
+                    'policycoreutils-python', 'policycoreutils-python-utils',
+                    'python3-firewall']
+system_services: ['rsyslog.service']
+

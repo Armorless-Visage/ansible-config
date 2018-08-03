@@ -1,0 +1,64 @@
+# Armorless-Visage 2017 (c) BSD 2-Clause
+Port 22
+#AddressFamily any
+{% for address in ansible_all_ipv4_addresses %}
+ListenAddress {{ address }}
+{% endfor %}
+
+HostKey /etc/ssh/ssh_host_rsa_key
+HostKey /etc/ssh/ssh_host_ed25519_key
+LoginGraceTime 2m
+PermitRootLogin no
+StrictModes yes
+#MaxAuthTries 6
+#MaxSessions 10
+# The default is to check both .ssh/authorized_keys and .ssh/authorized_keys2
+# but this is overridden so installations will only check .ssh/authorized_keys
+AuthorizedKeysFile	.ssh/authorized_keys
+HostbasedAuthentication no
+# Don't read the user's ~/.rhosts and ~/.shosts files
+IgnoreRhosts yes
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication no 
+PermitEmptyPasswords no
+# Change to no to disable s/key passwords
+ChallengeResponseAuthentication no
+
+AllowAgentForwarding no
+AllowTcpForwarding no
+#GatewayPorts no
+X11Forwarding no
+#X11DisplayOffset 10
+#X11UseLocalhost yes
+#PermitTTY yes
+#PrintMotd yes
+#PrintLastLog yes
+#TCPKeepAlive yes
+#UseLogin no
+PermitUserEnvironment no
+#Compression delayed
+#ClientAliveInterval 0
+#ClientAliveCountMax 3
+#UseDNS no
+#PidFile /var/run/sshd.pid
+#MaxStartups 10:30:100
+PermitTunnel no
+#ChrootDirectory none
+#VersionAddendum none
+
+# no default banner path
+#Banner none
+
+# override default of no subsystems
+Subsystem	sftp	/usr/libexec/sftp-server
+
+KexAlgorithms   curve25519-sha256@libssh.org,diffie-hellman-group-exchange-sha256
+Ciphers         chacha20-poly1305@openssh.com,aes128-gcm@openssh.com,aes128-ctr
+MACs            hmac-sha2-512-etm@openssh.com,hmac-sha2-256-etm@openssh.com,hmac-ripemd160-etm@openssh.com,hmac-sha2-512,hmac-sha2-256,hmac-ripemd160
+
+# Example of overriding settings on a per-user basis
+#Match User anoncvs
+#	X11Forwarding no
+#	AllowTcpForwarding no
+#	PermitTTY no
+#	ForceCommand cvs server

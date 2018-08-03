@@ -1,0 +1,70 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+# baseline configuration for openbsd61 servers on lan
+
+- name: install pf.conf
+  copy:
+    src: 'baseline_openbsd/etc/pf.conf'
+    dest: '/etc/pf.conf'
+    owner: 'root'
+    group: 'wheel'
+    mode: 0600
+    validate: 'pfctl -n -f %s'
+  notify:
+    - pf reload rules
+
+- name: install doas.conf
+  copy:
+    src: 'baseline_openbsd/etc/doas.conf'
+    dest: '/etc/doas.conf'
+    owner: 'root'
+    group: 'wheel'
+    mode: 0600
+    validate: 'doas -C %s'
+    
+- name: install login.conf
+  copy:
+    src: baseline_openbsd/etc/login.conf
+    dest: /etc/login.conf
+    owner: 'root'
+    group: 'wheel'
+    mode: 0644
+
+- name: install resolv.conf
+  template:
+    src: resolv.conf.j2
+    dest: /etc/resolv.conf
+    owner: 'root'
+    group: 'wheel'
+    mode: 0644
+
+- name: install sysctl.conf
+  copy:
+    src: baseline_openbsd/etc/sysctl.conf
+    dest: /etc/sysctl.conf
+    owner: 'root'
+    group: 'wheel'
+    mode: 0644
+
+- name: install ssh moduli
+  copy:
+    src: baseline_openbsd/etc/ssh/moduli
+    dest: /etc/moduli
+    owner: 'root'
+    group: 'wheel'
+    mode: 0644
+  notify:
+    - openbsd sshd reload
+  tags: ['ssh',]
+
+- name: install sshd_config
+  template: 
+    src: sshd_config.j2
+    dest: /etc/ssh/sshd_config
+    owner: 'root'
+    group: 'wheel'
+    mode: 0644
+    validate: 'sshd -t -f %s'
+  notify:
+    - openbsd sshd reload
+  tags: ['ssh',]

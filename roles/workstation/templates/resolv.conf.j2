@@ -1,0 +1,6 @@
+{% for server in dns_servers %}
+nameserver "{{ server }}"
+{% endfor %}
+{% if ansible_distribution == "OpenBSD" and ansible_distribution_version == "6.1" %}
+lookup file bind
+{% endif %}
