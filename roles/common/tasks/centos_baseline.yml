@@ -2,11 +2,17 @@
 # (c) Armorless-Visage 2017 BSD 2 Clause 
 # loosely based on stig/scap guidelines
 
+- name: update system packages
+  yum:
+      name: "*"
+      state: latest
+  tags: ['common', 'centos7', 'packages']
+
 - name: install system packages
-  dnf:
+  yum:
       name: "{{ item }}"
       state: latest
-  with_items: "{{ system_packages }}"
+  with_items: "{{ cent_packages }}"
   tags: ['common', 'centos7', 'packages']
 
 - name: start/enable system services
@@ -61,19 +67,20 @@
   notify:
     - reload sshd
 
-- name: blessed moduli file
-  copy: 
-    src: baseline_centos/etc/ssh/moduli 
-    dest: /etc/ssh/moduli 
-    owner: root 
-    group: root 
-    mode: 0644
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "sshd_key_t"
-  tags: ['common', 'centos7', 'ssh']
-  notify:
-    - reload sshd
+# TODO regen moduli
+#- name: blessed moduli file
+#  copy: 
+#    src: baseline_centos/etc/ssh/moduli 
+#    dest: /etc/ssh/moduli 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "sshd_key_t"
+#  tags: ['common', 'centos7', 'ssh']
+#  notify:
+#    - reload sshd
 
 - name: sysctl hardening
   copy: 
@@ -101,17 +108,18 @@
     setype: "modules_conf_t"
   tags: ['common', 'centos7', 'modules']
 
-- name: set firewalld default zone 'drop' and to log unicast rejections
-  copy: 
-    src: baseline_centos/etc/firewalld/firewalld.conf 
-    dest: /etc/firewalld/firewalld.conf 
-    owner: root 
-    group: root 
-    mode: 0640
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "modules_conf_t"
-  tags: ['common', 'centos7', 'firewalld']
+# TODO dmz?
+#- name: set firewalld default zone 'drop' and to log unicast rejections
+#  copy: 
+#    src: baseline_centos/etc/firewalld/firewalld.conf 
+#    dest: /etc/firewalld/firewalld.conf 
+#    owner: root 
+#    group: root 
+#    mode: 0640
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "modules_conf_t"
+#  tags: ['common', 'centos7', 'firewalld']
 
 - name: blessed auditd.conf
   copy: 
@@ -209,13 +217,13 @@
 #    setype: "etc_t" 
 #  tags: ['common', 'centos7']
 #
-#- name: disable ctrl-alt-del reboot
-#  file:
-#    state: link 
-#    src: /dev/null 
-#    dest: /etc/systemd/system/ctrl-alt-del.target
-#  tags: ['common', 'centos7']
-#
+- name: disable ctrl-alt-del reboot
+  file:
+    state: link 
+    src: /dev/null 
+    dest: /etc/systemd/system/ctrl-alt-del.target
+  tags: ['common', 'centos7']
+
 - name: /etc/securetty
   copy: 
     src: "baseline_centos/etc/securetty"

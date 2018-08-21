@@ -5,15 +5,18 @@
   become_method: sudo
   become: yes
   when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Five"
+
 - include: fedora_baseline.yml
   become_method: sudo
   become: yes
   when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Eight"
+
 - include: openbsd61_baseline.yml
   become_method: doas
   become: yes
   when: ansible_distribution == "OpenBSD" and ansible_distribution_version == "6.1"
-- include: fedora_baseline.yml
+
+- include: centos_baseline.yml
   become_method: sudo
   become: yes
-  when: ansible_distribution == "CentOS" and ansible_distribution_release == "7"
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
