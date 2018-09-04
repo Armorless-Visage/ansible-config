@@ -9,3 +9,8 @@
 # or rcctl reload so I am just restarting it for now TODO fix
 - name: reload unbound
   command: 'rcctl restart unbound'
+- name: systemd reload unbound
+  systemd:
+      name: 'unbound.service'
+      state: "restarted"
+

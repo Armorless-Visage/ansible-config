@@ -1,0 +1,77 @@
+---
+# Liam Nolan 2018 (c)
+#
+
+- name: install unbound
+  yum:
+    name: "unbound"
+    state: latest
+  become: yes
+  become_method: sudo
+  tags: ['packages', 'dns']
+
+- name: install unbound.conf template
+  template:
+    src: "linux_unbound.conf.j2"
+    dest: "/etc/unbound/unbound.conf"
+    mode: "0644"
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "named_conf_t"
+    backup: yes
+  tags: ['dns', 'unbound', 'conf']
+  notify:
+    - systemd reload unbound
+
+- name: install /var/unbound/etc/local.zone include
+  copy:
+      src: "local.zone"
+      dest: "/etc/unbound/local.zone"
+      mode: "u=rw,g=r,o=r"
+      seuser: "system_u"
+      serole: "object_r"
+      setype: "named_conf_t"
+      backup: yes
+  tags: ['dns', 'unbound', 'conf', 'zone']
+  notify:
+    - systemd reload unbound
+
+- name: install /var/unbound/etc/fwd.zone include
+  copy:
+      src: "fwd.zone"
+      dest: "/etc/unbound/fwd.zone"
+      mode: "u=rw,g=r,o=r"
+      seuser: "system_u"
+      serole: "object_r"
+      setype: "named_conf_t"
+      backup: yes
+  tags: ['dns', 'unbound', 'conf', 'zone']
+  notify:
+    - systemd reload unbound
+
+- name: install blacklist
+  copy:
+      src: "blacklist.txt"
+      dest: "/etc/unbound/blacklist.txt"
+      mode: "u=rw,g=r,o=r"
+      seuser: "system_u"
+      serole: "object_r"
+      setype: "named_conf_t"
+      backup: yes
+  tags: ['dns', 'unbound', 'conf', 'zone', 'blacklist']
+  notify:
+    - systemd reload unbound
+
+- name: enable systemd
+  systemd:
+      name: "unbound.service"
+      enabled: yes
+  tags: ['dns', 'unbound', 'enable']
+
+
+- name: set firewalld ports
+  firewalld:
+      service: "dns"
+      permanent: "yes"
+      state: "enabled"
+  tags: ['firewall', 'dns']
