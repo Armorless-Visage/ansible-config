@@ -24,6 +24,14 @@
   with_items: "{{ system_services }}"
   tags: ['common', 'centos7', 'services']
 
+- name: disable cloud-init
+  systemd:
+      name: "cloud-init.service"
+      enabled: "no"
+      masked: "no"
+  with_items: "{{ system_services }}"
+  tags: ['common', 'centos7', 'services', 'cloud-init']
+
 ### /etc/ configuration ###
 #- name: rsyslog.conf
 #  template: 

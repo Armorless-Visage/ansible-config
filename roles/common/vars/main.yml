@@ -16,5 +16,4 @@ system_services: ['rsyslog.service']
 cent_packages: ['rsyslog', 'vim', 'tar', 'python', 'ansible',
                     'libselinux', 'selinux-policy',
                     'selinux-policy-sandbox', 'selinux-policy-targeted',
-                    'policycoreutils-python']
-                    
+                    'policycoreutils-python', 'python-firewall', 'firewalld']

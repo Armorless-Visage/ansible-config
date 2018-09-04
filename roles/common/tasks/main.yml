@@ -1,10 +1,10 @@
 # Liam Nolan 2017 (c)
 ---
 
-- include: fedora_baseline.yml
+- include: ubuntu_baseline.yml
   become_method: sudo
   become: yes
-  when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Five"
+  when: ansible_distribution == "Ubuntu" 
 
 - include: fedora_baseline.yml
   become_method: sudo

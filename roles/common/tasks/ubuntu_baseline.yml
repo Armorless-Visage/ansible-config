@@ -1,0 +1,214 @@
+---
+# (c) Armorless-Visage 2017 BSD 2 Clause 
+# loosely based on stig/scap guidelines
+
+#- name: install system packages
+#  dnf:
+#      name: "{{ item }}"
+#      state: latest
+#  with_items: "{{ system_packages }}"
+#  tags: ['common', 'ubuntu', 'packages']
+#
+##- name: blessed sshd_config
+#  copy: 
+#    src: baseline_ubuntu/etc/ssh/sshd_config
+#    dest: /etc/ssh/sshd_config
+#    owner: root
+#    group: root
+#    mode: 0600
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "sshd_key_t"
+#  tags: ['common', 'ubuntu', 'ssh']
+#  notify:
+#    - reload sshd
+#
+#- name: blessed ssh_config 
+#  copy: 
+#    src: baseline_ubuntu/etc/ssh/ssh_config 
+#    dest: /etc/ssh/ssh_config
+#    owner: root
+#    group: root
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "sshd_key_t"
+#  tags: ['common', 'ubuntu', 'ssh']
+#  notify:
+#    - reload sshd
+
+#- name: blessed moduli file
+#  copy: 
+#    src: baseline_ubuntu/etc/ssh/moduli 
+#    dest: /etc/ssh/moduli 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "sshd_key_t"
+#  tags: ['common', 'ubuntu', 'ssh']
+#  notify:
+#    - reload sshd
+#
+- name: sysctl hardening
+  copy: 
+    src: baseline_ubuntu/etc/sysctl.d/sysctl_harden.conf 
+    dest: /etc/sysctl.d/hardening.conf  
+    owner: root 
+    group: root 
+    mode: 0644   
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "etc_t"
+  tags: ['common', 'ubuntu', 'sysctl']
+#  notify:
+#    - reload sysctl
+
+- name: disable modprobe loading of unnessesary kernel modules
+  copy: 
+    src: baseline_ubuntu/etc/modprobe.d/modprobe_harden.conf 
+    dest: /etc/modprobe.d/hardening.conf 
+    owner: root 
+    group: root 
+    mode: 0644
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "modules_conf_t"
+  tags: ['common', 'ubuntu', 'modules']
+
+#- name: set firewalld default zone 'drop' and to log unicast rejections
+#  copy: 
+#    src: baseline_ubuntu/etc/firewalld/firewalld.conf 
+#    dest: /etc/firewalld/firewalld.conf 
+#    owner: root 
+#    group: root 
+#    mode: 0640
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "modules_conf_t"
+#  tags: ['common', 'ubuntu', 'firewalld']
+
+#- name: blessed auditd.conf
+#  copy: 
+#    src: baseline_ubuntu/etc/audit/auditd.conf 
+#    dest: /etc/audit/auditd.conf 
+#    owner: root 
+#    group: root 
+#    mode: 0640
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "auditd_etc_t"
+#  tags: ['common', 'ubuntu', 'auditd']
+#
+#- name: auditd STIG/SCAP rules
+#  copy: 
+#    src: baseline_ubuntu/etc/audit/rules.d/hardening.rules 
+#    dest: /etc/audit/rules.d/hardening.rules 
+#    owner: root 
+#    group: root 
+#    mode: 0640
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "auditd_etc_t"
+#  tags: ['common', 'ubuntu', 'auditd']
+
+- name: disallow core dumps
+  copy: 
+    src: baseline_ubuntu/etc/security/limits.conf 
+    dest: /etc/security/limits.conf 
+    owner: root 
+    group: root 
+    mode: 0644
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "etc_t"
+  tags: ['common', 'ubuntu']
+
+#- name: set umask login.defs
+#  copy: 
+#    src: baseline_ubuntu/etc/login.defs 
+#    dest: /etc/login.defs 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t"
+#  tags: ['common', 'ubuntu']
+
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/password-auth 
+#  copy: 
+#    src: baseline_ubuntu/etc/pam.d/password-auth
+#    dest: /etc/pam.d/password-auth 
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t"
+#  tags: ['common', 'ubuntu']
+
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/postlogin
+#  copy: 
+#    src: baseline_ubuntu/etc/pam.d/postlogin
+#    dest: /etc/pam.d/postlogin
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t"  
+#  tags: ['common', 'ubuntu']
+
+# NOTE USE 'authselect' to generate - this is broken!
+#- name: blessed /etc/pam.d/system-auth
+#  copy: 
+#    src: baseline_ubuntu/etc/pam.d/system-auth
+#    dest: /etc/pam.d/system-auth
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t" 
+#  tags: ['common', 'ubuntu']
+
+#- name: set ntp server address for timesyncd
+#  template: 
+#    src: timesyncd.conf.j2
+#    dest: /etc/systemd/timesyncd.conf   
+#    owner: root 
+#    group: root 
+#    mode: 0644
+#    seuser: "system_u"
+#    serole: "object_r"
+#    setype: "etc_t" 
+#  tags: ['common', 'ubuntu']
+
+- name: disable ctrl-alt-del reboot
+  file:
+    state: link 
+    src: /dev/null 
+    dest: /etc/systemd/system/ctrl-alt-del.target
+  tags: ['common', 'ubuntu']
+
+- name: /etc/securetty
+  copy: 
+    src: "baseline_ubuntu/etc/securetty"
+    dest: "/etc/securetty"
+    mode: 0640
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "etc_t" 
+  tags: ['common', 'ubuntu']
+
+# TODO check bios/efi and select path appropriately
+#- name: check permissions on grub.cfg
+#  file: 
+#    path: /boot/grub2/grub.cfg 
+#    mode: 0600 
+#    state: file
+#  tags: ['common', 'ubuntu']
