@@ -3,6 +3,6 @@
 #
 system_packages: ['transmission-daemon']
 system_services: ['transmission-daemon.service']
-firewalld_ports: ['55099/tcp']
+firewalld_ports: ['53840-53940/tcp', '9091/tcp']
 firewalld_zone: "dmz"
-settings_json: "/home/sshuser/ansible/torrents/assets/transmission-daemon/settings.json"
+settings_json: "assets/transmission-daemon/settings.json"

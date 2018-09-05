@@ -1,0 +1,102 @@
+# Armorless-Visage 2017
+---
+- name: transmission needs EPEL
+  yum: 
+      name: "epel-release"
+      state: latest
+  become: yes
+  become_method: sudo
+  register: epel_install
+  tags: ['torrents', 'torrent', 'centos7', 'packages']
+
+- name: update yum cache
+  yum:
+      list: repos
+      update_cache: yes
+  become: yes
+  become_method: sudo
+  when: epel_install.changed
+  tags: ['torrents', 'torrent', 'centos7', 'packages']
+
+- name: transmission present and updated
+  yum: 
+      name: "{{ item }}"
+      state: latest
+  become: yes
+  become_method: sudo
+  with_items: "{{ system_packages }}"
+  register: updates
+  tags: ['torrents', 'torrent', 'centos7', 'packages']
+
+- name: attempt to create settings.json directory path
+  file: path=/var/lib/transmission/.config/transmission-daemon state=directory
+  tags: ['torrents', 'torrent', 'centos7']
+
+- name: install /var/lib/transmission/.config/transmission-daemon/settings.json
+  copy: 
+      src: "{{ settings_json }}"
+      dest: "/var/lib/transmission/.config/transmission-daemon/settings.json"
+      mode: "u=rw"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "var_lib_t"
+      backup: yes
+  register: transmission_settings
+  tags: ['torrents', 'torrent', 'centos7']
+
+- name: stop transmission-daemon to install new config
+  systemd:
+      name: "transmission-daemon.service"
+      state: "restarted"
+  when: transmission_settings.changed
+  register: stop_transmission
+  tags: ['torrents', 'torrent', 'centos7', 'service']
+
+- name: install /var/lib/transmission/.config/transmission-daemon/settings.json (again)
+  copy: 
+      src: "{{ settings_json }}"
+      dest: "/var/lib/transmission/.config/transmission-daemon/settings.json"
+      mode: "u=rw"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "var_lib_t"
+      backup: yes
+  when: stop_transmission.changed
+  tags: ['torrents', 'torrent', 'centos7']
+
+- name: restart transmission-daemon
+  systemd:
+      name: "transmission-daemon.service"
+      state: "started"
+  when: stop_transmission.changed
+  tags: ['torrents', 'torrent', 'centos7']
+
+# NOTE: bug with this module and systemd results in service not found errors
+- name: start/enable system services
+  systemd:
+      name: "{{ item }}"
+      state: "started"
+      enabled: "yes"
+      masked: "no"
+  with_items: "{{ system_services }}"
+  tags: ['torrents', 'torrent', 'centos7']
+
+- name: set firewalld state (ports)
+  firewalld:
+      port: "{{ item }}"
+      zone: "{{ firewalld_zone }}"
+      permanent: yes
+      state: enabled
+  with_items: "{{ firewalld_ports }}"
+  tags: ['torrents', 'torrent', 'centos7', 'firewall']
+
+
+# if core services updated restart the daemons
+# NOTE: using 'state: reloaded' produces an error about rpcbind.service
+- name: service update daemon reload
+  systemd:
+    name: "{{ item }}"
+    state: restarted
+  with_items: "{{ system_services }}"
+  when: updates.changed 
+  tags: ['torrents', 'torrent', 'centos7']
