@@ -1,0 +1,9 @@
+---
+# Liam Nolan 2017 (c) BSD 2-Clause
+#
+
+- name: squid restart
+  systemd:
+      name: "squid.service"
+      state: "restarted"
+

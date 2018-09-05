@@ -1,0 +1,39 @@
+---
+# (c) Armorless-Visage 2017 BSD 2 Clause 
+# loosely based on stig/scap guidelines
+
+- name: install/update squid
+  yum:
+      name: "squid"
+      state: latest
+  tags: ['proxy', 'centos7', 'packages']
+
+- name: squid config
+  copy: 
+    src: squid.conf
+    dest: /etc/squid/squid.conf  
+    owner: root 
+    group: root 
+    mode: 0640   
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "squid_conf_t"
+  tags: ['config', 'centos7', 'proxy']
+  notify:
+    - squid restart
+
+- name: start/enable system services
+  systemd:
+      name: "squid.service" 
+      state: "started"
+      enabled: "yes"
+      masked: "no"
+  tags: ['proxy', 'centos7', 'service']
+
+- name: set firewalld ports
+  firewalld:
+      port: "3128/tcp"
+      permanent: "yes"
+      state: "enabled"
+  tags: ['firewall', 'proxy']
+

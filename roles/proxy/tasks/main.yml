@@ -1,0 +1,7 @@
+# Liam Nolan 2017 (c)
+---
+
+- include: centos.yml
+  become_method: sudo
+  become: yes
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
