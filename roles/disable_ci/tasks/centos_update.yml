@@ -1,0 +1,23 @@
+---
+# (c) Liam Nolan 2018 ISC
+- name: disable cloud-init
+  systemd:
+      name: "cloud-init.service"
+      enabled: "no"
+      masked: "no"
+  tags:
+    - ci
+    - cloud-init
+    - centos7
+    - service
+
+- name: remove cloud-init
+  yum:
+    name: "cloud-init"
+    state: removed
+  tags:
+    - ci
+    - cloud-init
+    - centos7
+    - package
+

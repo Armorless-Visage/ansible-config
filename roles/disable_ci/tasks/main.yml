@@ -1,0 +1,12 @@
+# Liam Nolan 2017 (c)
+---
+
+- include: fedora_update.yml
+  become_method: sudo
+  become: yes
+  when: ansible_distribution == "Fedora" and ansible_distribution_release == "Twenty Eight"
+
+- include: centos_update.yml
+  become_method: sudo
+  become: yes
+  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
