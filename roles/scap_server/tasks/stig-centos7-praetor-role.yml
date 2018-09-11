@@ -10303,22 +10303,22 @@
     - NIST-800-53-MP-2
     - DISA-STIG-RHEL-07-021000
 
-- name: Ensure permission nosuid are set on /home
-  mount:
-    path: "/home"
-    src: "{{device_name.stdout}}"
-    opts: "{{device_cur_mountoption.stdout}},nosuid"
-    state: "mounted"
-    fstype: "{{device_fstype.stdout}}"
-  tags:
-    - mount_option_home_nosuid
-    - unknown_severity
-    - configure_strategy
-    - low_complexity
-    - high_disruption
-    - NIST-800-53-CM-7
-    - NIST-800-53-MP-2
-    - DISA-STIG-RHEL-07-021000
+#- name: Ensure permission nosuid are set on /home
+#  mount:
+#    path: "/home"
+#    src: "{{device_name.stdout}}"
+#    opts: "{{device_cur_mountoption.stdout}},nosuid"
+#    state: "mounted"
+#    fstype: "{{device_fstype.stdout}}"
+#  tags:
+#    - mount_option_home_nosuid
+#    - unknown_severity
+#    - configure_strategy
+#    - low_complexity
+#    - high_disruption
+#    - NIST-800-53-CM-7
+#    - NIST-800-53-MP-2
+#    - DISA-STIG-RHEL-07-021000
 
 - name: XCCDF Value var_removable_partition # promote to variable
   set_fact:
@@ -10375,24 +10375,24 @@
     - NIST-800-53-CM-7
     - NIST-800-53-MP-2
 
-- name: Ensure permission nodev are set on var_removable_partition
-  mount:
-    path: "{{ var_removable_partition }}"
-    src: "{{device_name.stdout}}"
-    opts: "{{ device_cur_mountoption.stdout }},nodev"
-    state: "mounted"
-    fstype: "{{device_fstype.stdout}}"
-  tags:
-    - mount_option_nodev_removable_partitions
-    - unknown_severity
-    - configure_strategy
-    - low_complexity
-    - high_disruption
-    - NIST-800-53-AC-19(a)
-    - NIST-800-53-AC-19(d)
-    - NIST-800-53-AC-19(e)
-    - NIST-800-53-CM-7
-    - NIST-800-53-MP-2
+#- name: Ensure permission nodev are set on var_removable_partition
+#  mount:
+#    path: "{{ var_removable_partition }}"
+#    src: "{{device_name.stdout}}"
+#    opts: "{{ device_cur_mountoption.stdout }},nodev"
+#    state: "mounted"
+#    fstype: "{{device_fstype.stdout}}"
+#  tags:
+#    - mount_option_nodev_removable_partitions
+#    - unknown_severity
+#    - configure_strategy
+#    - low_complexity
+#    - high_disruption
+#    - NIST-800-53-AC-19(a)
+#    - NIST-800-53-AC-19(d)
+#    - NIST-800-53-AC-19(e)
+#    - NIST-800-53-CM-7
+#    - NIST-800-53-MP-2
 
 - name: get back device associated to mountpoint
   shell: mount | grep ' /home ' |cut -d ' ' -f 1
@@ -10427,19 +10427,19 @@
     - low_complexity
     - high_disruption
 
-- name: Ensure permission nodev are set on /home
-  mount:
-    path: "/home"
-    src: "{{device_name.stdout}}"
-    opts: "{{device_cur_mountoption.stdout}},nodev"
-    state: "mounted"
-    fstype: "{{device_fstype.stdout}}"
-  tags:
-    - mount_option_home_nodev
-    - unknown_severity
-    - configure_strategy
-    - low_complexity
-    - high_disruption
+#- name: Ensure permission nodev are set on /home
+#  mount:
+#    path: "/home"
+#    src: "{{device_name.stdout}}"
+#    opts: "{{device_cur_mountoption.stdout}},nodev"
+#    state: "mounted"
+#    fstype: "{{device_fstype.stdout}}"
+#  tags:
+#    - mount_option_home_nodev
+#    - unknown_severity
+#    - configure_strategy
+#    - low_complexity
+#    - high_disruption
 
 - name: XCCDF Value var_removable_partition # promote to variable
   set_fact:
@@ -10496,24 +10496,24 @@
     - NIST-800-53-CM-7
     - NIST-800-53-MP-2
 
-- name: Ensure permission noexec are set on var_removable_partition
-  mount:
-    path: "{{ var_removable_partition }}"
-    src: "{{device_name.stdout}}"
-    opts: "{{ device_cur_mountoption.stdout }},noexec"
-    state: "mounted"
-    fstype: "{{device_fstype.stdout}}"
-  tags:
-    - mount_option_noexec_removable_partitions
-    - unknown_severity
-    - configure_strategy
-    - low_complexity
-    - high_disruption
-    - NIST-800-53-AC-19(a)
-    - NIST-800-53-AC-19(d)
-    - NIST-800-53-AC-19(e)
-    - NIST-800-53-CM-7
-    - NIST-800-53-MP-2
+#- name: Ensure permission noexec are set on var_removable_partition
+#  mount:
+#    path: "{{ var_removable_partition }}"
+#    src: "{{device_name.stdout}}"
+#    opts: "{{ device_cur_mountoption.stdout }},noexec"
+#    state: "mounted"
+#    fstype: "{{device_fstype.stdout}}"
+#  tags:
+#    - mount_option_noexec_removable_partitions
+#    - unknown_severity
+#    - configure_strategy
+#    - low_complexity
+#    - high_disruption
+#    - NIST-800-53-AC-19(a)
+#    - NIST-800-53-AC-19(d)
+#    - NIST-800-53-AC-19(e)
+#    - NIST-800-53-CM-7
+#    - NIST-800-53-MP-2
 
 - name: XCCDF Value var_removable_partition # promote to variable
   set_fact:
@@ -10576,26 +10576,26 @@
     - NIST-800-53-MP-2
     - DISA-STIG-RHEL-07-021010
 
-- name: Ensure permission nosuid are set on var_removable_partition
-  mount:
-    path: "{{ var_removable_partition }}"
-    src: "{{device_name.stdout}}"
-    opts: "{{ device_cur_mountoption.stdout }},nosuid"
-    state: "mounted"
-    fstype: "{{device_fstype.stdout}}"
-  tags:
-    - mount_option_nosuid_removable_partitions
-    - unknown_severity
-    - configure_strategy
-    - low_complexity
-    - high_disruption
-    - NIST-800-53-AC-6
-    - NIST-800-53-AC-19(a)
-    - NIST-800-53-AC-19(d)
-    - NIST-800-53-AC-19(e)
-    - NIST-800-53-CM-7
-    - NIST-800-53-MP-2
-    - DISA-STIG-RHEL-07-021010
+#- name: Ensure permission nosuid are set on var_removable_partition
+#  mount:
+#    path: "{{ var_removable_partition }}"
+#    src: "{{device_name.stdout}}"
+#    opts: "{{ device_cur_mountoption.stdout }},nosuid"
+#    state: "mounted"
+#    fstype: "{{device_fstype.stdout}}"
+#  tags:
+#    - mount_option_nosuid_removable_partitions
+#    - unknown_severity
+#    - configure_strategy
+#    - low_complexity
+#    - high_disruption
+#    - NIST-800-53-AC-6
+#    - NIST-800-53-AC-19(a)
+#    - NIST-800-53-AC-19(d)
+#    - NIST-800-53-AC-19(e)
+#    - NIST-800-53-CM-7
+#    - NIST-800-53-MP-2
+#    - DISA-STIG-RHEL-07-021010
 
 - name: Ensure sysctl fs.suid_dumpable is set to 0
   sysctl:
