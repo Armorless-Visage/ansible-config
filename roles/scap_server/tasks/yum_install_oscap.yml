@@ -1,0 +1,12 @@
+---
+# (c) Armorless-Visage 2018 ISC 
+
+- name: install oscap
+  yum:
+      name: "openscap-scanner"
+      state: latest
+  tags:
+    - oscap
+    - centos7
+    - centos
+    - install
