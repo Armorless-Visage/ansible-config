@@ -1,7 +1,8 @@
 ---
-# Liam Nolan 2017 (c)
-#
-# make sure to install includes before unbound.conf so checkconf works
+# Liam Nolan 2018 (c)
+# unbound openbsd 63 config
+
+# unbound.conf include 
 - name: install /var/unbound/etc/local.zone include
   copy: 
       src: "local.zone"
@@ -12,6 +13,7 @@
   notify:
     - reload unbound
 
+# unbound.conf include 
 - name: install /var/unbound/etc/fwd.zone include
   copy: 
       src: "fwd.zone"

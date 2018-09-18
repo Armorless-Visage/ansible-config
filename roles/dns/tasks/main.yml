@@ -1,10 +1,10 @@
 # Liam Nolan 2017 (c)
 ---
 
-#- include: openbsd61.yml
-#  become_method: doas
-#  become: yes
-#  when: ansible_distribution == "OpenBSD"
+- include: openbsd61.yml
+  become_method: doas
+  become: yes
+  when: ansible_distribution == "OpenBSD"
 #- include: fedora25.yml
 #  become_method: sudo
 #  become: yes

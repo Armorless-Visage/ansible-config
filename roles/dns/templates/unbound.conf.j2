@@ -3,7 +3,7 @@ server:
 	#interface: 127.0.0.1@5353	# listen on alternative port
 	interface: ::1
 	do-ip6: no
-	interface: '{{ ansible_all_ipv4_addresses[0] }}'
+	interface: '{{ ansible_em1["ipv4"][0]["address"] }}'
 
 	access-control: 0.0.0.0/0 refuse
 	access-control: 127.0.0.0/8 allow

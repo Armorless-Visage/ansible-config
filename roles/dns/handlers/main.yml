@@ -1,16 +1,23 @@
-# Liam Nolan 2017 (c)
+# Liam Nolan 2018 (c)
 ---
 - name: restart dnsmasq
   systemd:
       name: 'dnsmasq.service'
       state: "restarted"
 
+# openbsd
 # unbound fails (chroot problems, again...) using unbound-control reload
 # or rcctl reload so I am just restarting it for now TODO fix
 - name: reload unbound
-  command: 'rcctl restart unbound'
+  become: yes
+  become_method: doas
+  command: "rcctl restart unbound"
+
+# linux 
 - name: systemd reload unbound
+  become: yes
+  become_method: sudo
   systemd:
-      name: 'unbound.service'
+      name: "unbound.service"
       state: "restarted"
 

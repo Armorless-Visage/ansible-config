@@ -1,6 +1,6 @@
 ---
-# Liam Nolan 2018 (c)
-#
+# Liam Nolan 2018 (c) ISC
+# unbound centos7 config
 
 - name: install unbound
   yum:
@@ -10,20 +10,7 @@
   become_method: sudo
   tags: ['packages', 'dns']
 
-- name: install unbound.conf template
-  template:
-    src: "linux_unbound.conf.j2"
-    dest: "/etc/unbound/unbound.conf"
-    mode: "0644"
-    seuser: "system_u"
-    serole: "object_r"
-    setype: "named_conf_t"
-    backup: yes
-  tags: ['dns', 'unbound', 'conf']
-  notify:
-    - systemd reload unbound
-
-- name: install /var/unbound/etc/local.zone include
+- name: install /etc/local.zone include
   copy:
       src: "local.zone"
       dest: "/etc/unbound/local.zone"
@@ -36,7 +23,7 @@
   notify:
     - systemd reload unbound
 
-- name: install /var/unbound/etc/fwd.zone include
+- name: install /etc/fwd.zone include
   copy:
       src: "fwd.zone"
       dest: "/etc/unbound/fwd.zone"
@@ -62,12 +49,25 @@
   notify:
     - systemd reload unbound
 
+- name: install unbound.conf template
+  template:
+    src: "linux_unbound.conf.j2"
+    dest: "/etc/unbound/unbound.conf"
+    mode: "0644"
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "named_conf_t"
+    backup: yes
+    validate: 'unbound-checkconf %s'
+  tags: ['dns', 'unbound', 'conf']
+  notify:
+    - systemd reload unbound
+
 - name: enable systemd
   systemd:
       name: "unbound.service"
       enabled: yes
   tags: ['dns', 'unbound', 'enable']
-
 
 - name: set firewalld ports
   firewalld:
