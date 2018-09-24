@@ -1,8 +1,10 @@
-/mnt/media/torrents 10.66.66.5(rw)
-/mnt/media/torrents 10.66.66.4(rw,all_squash,anonuid=992,anongid=992)
+/mnt/media/torrents 10.66.66.2(rw,sec=krb5)
 /mnt/media/torrents 192.168.33.7(ro,async)
-/mnt/media/music    192.168.99.9(rw)
+/mnt/media/music    192.168.99.9(ro,async)
 /mnt/media/music    192.168.33.7(ro,async)
-/mnt/logs/snort     192.168.33.1(rw) 192.168.99.1(rw) 10.66.66.1(rw) 10.99.99.1(rw)
 /mnt/media/torrents 192.168.33.55(ro,async)
+/mnt/media/torrents 10.99.99.6(ro,async)
+/mnt/media/torrents 10.99.99.4(ro,async)
+/mnt/media/torrents 192.168.99.101(ro,async)
+
 

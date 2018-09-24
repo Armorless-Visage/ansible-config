@@ -1,0 +1,31 @@
+# Armorless-Visage 2018
+---
+- name: install /etc/exports
+  copy: 
+      src: "assets/exports"
+      dest: "/etc/exports"
+      mode: "u=rw,g=r,o=r"
+      seuser: "system_u" 
+      serole: "object_r"
+      setype: "exports_t"
+      backup: yes
+  notify:
+    - exportfs reload
+
+# NOTE: bug with this module and systemd results in service not found errors
+- name: start/enable system services
+  systemd:
+      name: "{{ item }}"
+      state: "started"
+      enabled: "yes"
+      masked: "no"
+  with_items: "{{ system_services }}"
+
+- name:  firewalld ports
+  firewalld:
+      service: "{{ item }}"
+      permanent: yes
+      state: enabled
+  with_items: "{{ firewalld_services }}"
+
+

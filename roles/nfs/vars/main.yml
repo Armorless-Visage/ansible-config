@@ -1,8 +1,7 @@
 ---
-# Liam Nolan 2017 (c) BSD 2-Clause
+# Liam Nolan 2018 (c) ISC
 #
 # required services
 system_services: ['nfs.service', 'rpcbind.service']
 # firewalld conf 
 firewalld_services: ['ssh', 'nfs']
-firewalld_zone: "dmz"
