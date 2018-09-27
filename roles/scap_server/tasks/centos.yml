@@ -1,0 +1,18 @@
+# Liam Nolan 2018 (c)
+---
+
+#vars_prompt:
+#  - name: "stig"
+#    prompt: "Do you want to apply the oscap stig remediation role?\nWARNING! This is a very long playbook and will modify the system extensively.\nOnly run this if you are sure that changing the system will not result in something bad! (y/n)"
+#
+- name: install oscap
+  include: yum_install_oscap.yml
+  become_method: sudo
+  become: yes
+- include: centos_prep.yml
+  become_method: sudo
+  become: yes
+- include: stig-centos7-praetor-role.yml
+  become_method: sudo
+  become_flags: "-r unconfined_r"
+  become: yes

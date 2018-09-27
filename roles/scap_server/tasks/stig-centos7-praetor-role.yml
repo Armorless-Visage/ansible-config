@@ -33,7 +33,6 @@
 # TODO: full bugfix
 ###############################################################################
 
-
 - name: Ensure sendmail is removed
   package:
     name: "{{item}}"
@@ -2970,7 +2969,6 @@
     - NIST-800-53-CM-6(b)
     - DISA-STIG-RHEL-07-010430
 
-
 - name: Ensure libsemanage-python installed
   package:
     name: libsemanage-python
@@ -2982,7 +2980,6 @@
         false
   tags:
     - always
-
 
 - name: Set SELinux boolean daemons_dump_core accordingly
   seboolean:

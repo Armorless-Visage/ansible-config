@@ -1,16 +1,6 @@
 # Liam Nolan 2018 (c)
 ---
-
-- include: yum_install_oscap.yml
+- include: centos.yml
   become_method: sudo
-  become: yes
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
-- include: centos_prep.yml
-  become_method: sudo
-  become: yes
-  when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"
-- include: stig-centos7-praetor-role.yml
-  become_method: sudo
-  become_flags: "-r unconfined_r"
   become: yes
   when: ansible_distribution == "CentOS" and ansible_distribution_major_version == "7"

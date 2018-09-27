@@ -13,4 +13,14 @@
     - prep
     - nocomments
     - ssh
-    
+
+- name: config /etc/issue
+  copy:
+    src: issue
+    dest: /etc/issue
+    owner: root
+    group: root
+    mode: 0644
+    seuser: "system_u"
+    serole: "object_r"
+    setype: "etc_t"
