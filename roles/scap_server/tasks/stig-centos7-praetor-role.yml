@@ -2431,11 +2431,11 @@
     new_type: auth
     new_control: required
     new_module_path: pam_faillock.so
-    module_arguments: 'preauth
+    module_arguments: "preauth
         silent
         deny: {{ var_accounts_passwords_pam_faillock_deny }}
         unlock_time={{ var_accounts_passwords_pam_faillock_unlock_time }}
-        fail_interval={{ var_accounts_passwords_pam_faillock_fail_interval }}'
+        fail_interval={{ var_accounts_passwords_pam_faillock_fail_interval }}"
     state: before
   tags:
     - accounts_passwords_pam_faillock_deny
